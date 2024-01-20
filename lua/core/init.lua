@@ -16,12 +16,14 @@ vim.opt.rtp:prepend(lazypath)
 -- linking configuration files from "core"
 require("core.options")
 require("core.keymaps")
+require("core.autocmds")
+
 
 local plugins = {
     {import = "plugins"},
     {import = "plugins.lsp"},
 
-} -- plugin directory path wrt "lua" directory
+} -- table with plugin directory path wrt "lua" directory
 
 -- lazy setup options
 local opts = {
