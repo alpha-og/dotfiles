@@ -16,7 +16,7 @@ opt.relativenumber = true -- toggle relative line numbers
 
 -- Search settings
 opt.ignorecase = true -- toggle ignore search query casing
-opt.smartcase = true 
+opt.smartcase = true
 opt.hlsearch = true -- toggle search result highlighting
 opt.incsearch = true
 

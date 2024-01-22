@@ -9,6 +9,10 @@ mapkey("n", "<S-l>", "bnext") -- Next buffer
 mapkey("n", "<S-h>", "bprevious") -- Prev buffer
 mapkey("n", "<leader>`", "e #") -- Switch to Other Buffer
 
+-- Buffer Management
+mapkey("n", "<leader>bd", "lua MiniBufremove.delete()", { desc = "Delete active buffer" })
+mapkey("n", "<leader>bD", "lua MiniBufremove.delete(0,true)", { desc = "Force delete active buffer" })
+-- mapkey("n",)
 -- Pane and Window Navigation
 -- vim-tmux-navigator handles the keymaps by default with <C-h>, <C-j>, <C-k>, <C-l>
 

@@ -1,66 +1,19 @@
 local config = function()
-    local lspconfig = require("lspconfig")
-    local cmp_nvim_lsp = require("cmp_nvim_lsp")
+	local lspconfig = require("lspconfig")
+	local cmp_nvim_lsp = require("cmp_nvim_lsp")
+	local on_attach = require("utils.lsp").on_attach
+	-- used to enable autocompletion (assign to every lsp server config)
+	local capabilities = cmp_nvim_lsp.default_capabilities()
 
-    local keymap = vim.keymap -- for conciseness
+	-- Change the Diagnostic symbols in the sign column (gutter)
+	-- (not in youtube nvim video)
+	local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+	for type, icon in pairs(signs) do
+		local hl = "DiagnosticSign" .. type
+		vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+	end
 
-    local opts = { noremap = true, silent = true }
-    local on_attach = function(client, bufnr)
-      opts.buffer = bufnr
-
-      -- set keybinds
-      opts.desc = "Show LSP references"
-      keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
-
-      opts.desc = "Go to declaration"
-      keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
-
-      opts.desc = "Show LSP definitions"
-      keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
-
-      opts.desc = "Show LSP implementations"
-      keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
-
-      opts.desc = "Show LSP type definitions"
-      keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
-
-      opts.desc = "See available code actions"
-      keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
-
-      opts.desc = "Smart rename"
-      keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
-
-      opts.desc = "Show buffer diagnostics"
-      keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
-
-      opts.desc = "Show line diagnostics"
-      keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
-
-      opts.desc = "Go to previous diagnostic"
-      keymap.set("n", "ds", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
-
-      opts.desc = "Go to next diagnostic"
-      keymap.set("n", "df", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
-
-      opts.desc = "Show documentation for what is under cursor"
-      keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
-
-      opts.desc = "Restart LSP"
-      keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
-    end
-
-    -- used to enable autocompletion (assign to every lsp server config)
-    local capabilities = cmp_nvim_lsp.default_capabilities()
-
-    -- Change the Diagnostic symbols in the sign column (gutter)
-    -- (not in youtube nvim video)
-    local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-    for type, icon in pairs(signs) do
-      local hl = "DiagnosticSign" .. type
-      vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-    end
-
-    -- lua
+	-- lua
 	lspconfig.lua_ls.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
@@ -125,26 +78,24 @@ local config = function()
 		filetypes = { "sh", "aliasrc" },
 	})
 
-    -- typescriptreact, javascriptreact, css, sass, scss, less, svelte, vue
+	-- typescriptreact, javascriptreact, css, sass, scss, less, svelte, vue
 	lspconfig.emmet_ls.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
 		filetypes = {
 			"typescriptreact",
 			"javascriptreact",
-			"javascript",
 			"css",
-			-- "sass",
-			-- "scss",
-			-- "less",
-			-- "svelte",
-			-- "vue",
+			"sass",
+			"scss",
+			"less",
+			"svelte",
+			"vue",
 			"html",
 		},
 	})
-    
-    
-    -- C/C++
+
+	-- C/C++
 	lspconfig.clangd.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
@@ -167,8 +118,8 @@ local config = function()
 	-- local solhint = require("efmls-configs.linters.solhint")
 	local cpplint = require("efmls-configs.linters.cpplint")
 	local clangformat = require("efmls-configs.formatters.clang_format")
-
-    -- configure efm server
+	local alex = require("efmls-configs.linters.alex")
+	-- configure efm server
 	lspconfig.efm.setup({
 		filetypes = {
 			"lua",
@@ -211,7 +162,7 @@ local config = function()
 				typescriptreact = { eslint, prettier_d },
 				-- svelte = { eslint, prettier_d },
 				-- vue = { eslint, prettier_d },
-				markdown = { prettier_d },
+				markdown = { alex, prettier_d },
 				-- docker = { hadolint, prettier_d },
 				-- solidity = { solhint },
 				html = { prettier_d },
@@ -224,8 +175,8 @@ local config = function()
 end
 
 return {
-    "neovim/nvim-lspconfig",
-	event = {"BufReadPre","BufNewFile"},
+	"neovim/nvim-lspconfig",
+	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/nvim-cmp",
 		"hrsh7th/cmp-buffer",
@@ -233,10 +184,10 @@ return {
 		"williamboman/mason.nvim",
 		"creativenull/efmls-configs-nvim",
 		"windwp/nvim-autopairs",
-        {
-            "antosha417/nvim-lsp-file-operations",
-            config = true,
-        },
+		{
+			"antosha417/nvim-lsp-file-operations",
+			config = true,
+		},
 	},
 	config = config,
 }

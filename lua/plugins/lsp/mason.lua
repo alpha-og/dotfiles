@@ -47,7 +47,7 @@ local config = function()
 			"cpplint", -- cpp linter
 			"clang-format", -- c/cpp formatter
 		},
-	auto_update = true,
+		auto_update = true,
 	})
 end
 
