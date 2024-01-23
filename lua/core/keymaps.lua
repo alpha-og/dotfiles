@@ -25,9 +25,10 @@ mapkey("n", "<S-C-Left>", "vertical resize +2")
 mapkey("n", "<S-C-Right>", "vertical resize -2")
 
 -- Comments
-api.nvim_set_keymap("n", "<C-/>", "gtc", { noremap = false })
-api.nvim_set_keymap("v", "<C-/>", "goc", { noremap = false })
+api.nvim_set_keymap("n", "<C-_>", "gtc", { noremap = false })
+api.nvim_set_keymap("v", "<C-_>", "goc", { noremap = false })
 
 -- Indenting
 vim.keymap.set("v", "<", "<gv", { silent = true, noremap = true })
 vim.keymap.set("v", ">", ">gv", { silent = true, noremap = true })
+

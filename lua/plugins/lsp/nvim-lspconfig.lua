@@ -13,6 +13,9 @@ local config = function()
 		vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 	end
 
+	-- tailwind
+	lspconfig.tailwindcss.setup({})
+
 	-- lua
 	lspconfig.lua_ls.setup({
 		capabilities = capabilities,
