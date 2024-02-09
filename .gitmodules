@@ -1,0 +1,21 @@
+[submodule "tmux/plugins/tmux-continuum"]
+	path = tmux/plugins/tmux-continuum
+	url = https://github.com/tmux-plugins/tmux-continuum.git
+[submodule "tmux/plugins/tmux-resurrect"]
+	path = tmux/plugins/tmux-resurrect
+	url = https://github.com/tmux-plugins/tmux-resurrect.git
+[submodule "tmux/plugins/tmux-sensible"]
+	path = tmux/plugins/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible.git
+[submodule "tmux/plugins/tmux-themepack"]
+	path = tmux/plugins/tmux-themepack
+	url = https://github.com/tmux-plugins/tmux-themepack.git
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm.git
+[submodule "tmux/plugins/vim-tmux-navigator"]
+	path = tmux/plugins/vim-tmux-navigator
+	url = https://github.com/tmux-plugins/vim-tmux-navigator.git
+[submodule "tmux/plugins/tmux"]
+	path = tmux/plugins/tmux
+	url = https://github.com/catppuccin/tmux.git
