@@ -16,6 +16,12 @@ local config = function()
 	-- tailwind
 	lspconfig.tailwindcss.setup({})
 
+	-- mdx and markdown
+	lspconfig.marksman.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "mdx", "markdown" },
+	})
 	-- lua
 	lspconfig.lua_ls.setup({
 		capabilities = capabilities,
@@ -108,12 +114,20 @@ local config = function()
 		},
 	})
 
+	-- astro
+	lspconfig.astro.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "astro" },
+	})
+
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
 	local flake8 = require("efmls-configs.linters.flake8")
 	local black = require("efmls-configs.formatters.black")
 	local eslint = require("efmls-configs.linters.eslint")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
+	local prettier = require("efmls-configs.formatters.prettier")
 	local fixjson = require("efmls-configs.formatters.fixjson")
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt = require("efmls-configs.formatters.shfmt")
@@ -137,9 +151,11 @@ local config = function()
 			-- "svelte",
 			-- "vue",
 			"markdown",
+			"mdx",
 			-- "docker",
 			-- "solidity",
 			"html",
+			"astro",
 			"css",
 			"c",
 			"cpp",
@@ -166,12 +182,14 @@ local config = function()
 				-- svelte = { eslint, prettier_d },
 				-- vue = { eslint, prettier_d },
 				markdown = { alex, prettier_d },
+				mdx = { alex, prettier_d },
 				-- docker = { hadolint, prettier_d },
 				-- solidity = { solhint },
 				html = { prettier_d },
 				css = { prettier_d },
 				c = { clangformat, cpplint },
 				cpp = { clangformat, cpplint },
+				astro = { prettier },
 			},
 		},
 	})

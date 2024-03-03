@@ -25,6 +25,7 @@ local config = function()
 			"emmet_ls",
 			-- "prismals",
 			"pyright",
+			"astro",
 			"clangd",
 			"bashls",
 			"jsonls",
@@ -39,13 +40,16 @@ local config = function()
 			"stylua", -- lua formatter
 			"flake8", -- python linter
 			"black", -- python formatter
-			"prettierd", -- prettier formatter
+			"prettierd", -- prettier daemon formatter
+			"prettier", -- prettier formatter
 			"eslint_d", -- ts/js linter
 			"fixjson", -- json formatter
 			"shellcheck", -- shell linter
 			"shfmt", -- shell formatter
 			"cpplint", -- cpp linter
 			"clang-format", -- c/cpp formatter
+			"ast-grep",
+			"alex", -- markdown linter
 		},
 		auto_update = true,
 	})

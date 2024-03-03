@@ -27,6 +27,11 @@ local config = function()
 			"gitignore",
 			"python",
 			"toml",
+			"astro",
+			"cpp",
+			"c",
+			"vim",
+			"lua",
 		},
 		auto_install = true,
 		highlight = {
