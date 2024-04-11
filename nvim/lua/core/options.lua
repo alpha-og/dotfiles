@@ -55,3 +55,7 @@ opt.showmode = false
 opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.foldlevel = 99
+
+-- copilot filetypes
+vim.g.copilot_filetypes = { markdown = true, mdx = true }
+
