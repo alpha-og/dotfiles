@@ -32,3 +32,15 @@ api.nvim_set_keymap("v", "<C-_>", "goc", { noremap = false })
 vim.keymap.set("v", "<", "<gv", { silent = true, noremap = true })
 vim.keymap.set("v", ">", ">gv", { silent = true, noremap = true })
 
+vim.keymap.set(
+	"n",
+	"<leader>ar",
+	"<cmd>Rest run<cr>",
+	{ desc = "Run request under the cursor", silent = true, noremap = true }
+)
+vim.keymap.set(
+	"n",
+	"<leader>al",
+	"<cmd>Rest run last<cr>",
+	{ desc = "Re-run latest request", silent = true, noremap = true }
+)

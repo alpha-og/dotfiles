@@ -31,7 +31,9 @@ local config = function()
 			"cpp",
 			"c",
 			"vim",
-			"lua",
+			"xml",
+			"http",
+			"graphql",
 		},
 		auto_install = true,
 		highlight = {
