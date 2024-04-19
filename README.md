@@ -32,3 +32,9 @@ The entry point for neovim when it looks for configuration files, is the `init.l
 Alright, so we've successfully imported the `core` directory, but again how does neovim actually go about using the contents of the directory? Just as we had an `init.lua` file in the `~/.config/nvim`, we also define an `init.lua` file within the `core` directory. This file is where we bootstrap the lazy plugin managerand import configurations for editor options, keymaps and auto-commands. We also specify the themes to be installed (it is also required to export a lua table with the plugin spec corresponding to the theme within the `plugins` directory). In order for lazy to correctly load the required plugins we also have to specify the path of the `plugins` directory and any sub-directories within the the `plugins` directory
 
 The lazy plugin manager will handle the installation of plugins, based on the lua tables exported by files in the `plugins` directory.
+
+## Window Management 
+I've chosen to go with a tiling window manager, Yabai supplemented by Skhd for shortcuts. Both can be installed via homebrew. 
+
+## Terminal Configuration
+I've customised my terminal using oh-my-zsh and the powerlevel10k theme. I am also using some other CLI utilties like fzf and fd for fuzzy finding, bat, eza amd git-delta
