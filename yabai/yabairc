@@ -25,6 +25,10 @@ yabai -m config mouse_action2 resize
 # when window is dropped in center of another window, swap them (on edges it will split it)
 yabai -m mouse_drop_action swap
 
+# tell yabai that I'm using a custom menubar
+yabai -m config external_bar all:37:0
+
+# disable yabai on these apps
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Discord$" manage=off
