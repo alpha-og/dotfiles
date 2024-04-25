@@ -1,55 +1,57 @@
 #!/bin/bash
 
+##### Colors #####
 source "$CONFIG_DIR/colors.sh"
 
-# This is a demo config to showcase some of the most important commands.
-# It is meant to be changed and configured, as it is intentionally kept sparse.
-# For a (much) more advanced configuration example see my dotfiles:
-# https://github.com/FelixKratz/dotfiles
-
+##### Directories #####
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
-##### Colors #####
-
-
 ##### Bar Appearance #####
-# Configuring the general appearance of the bar.
-# These are only some of the options available. For all options see:
-# https://felixkratz.github.io/SketchyBar/config/bar
-# If you are looking for other colors, see the color picker:
-# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+bar=(
+	position=top
+	height=32
+	blur_radius=30
+	color="$BASE"
+	margin=5
+	corner_radius=7
+	y_offset=5
+	border_width=1
+	border_color="$SURFACE1"
+	padding_left=5
+	padding_right=5
 
-sketchybar --bar position=top height=32 blur_radius=30 color="$BASE" margin=5 corner_radius=7 y_offset=5 border_width=1 border_color="$SURFACE1" padding_left=5 padding_right=5
+)
 
-##### Changing Defaults #####
-# We now change some default values, which are applied to all further items.
-# For a full list of all available item properties see:
-# https://felixkratz.github.io/SketchyBar/config/items
-
+sketchybar --bar "${bar[@]}"
+##### Defaults #####
 default=(
-  padding_left=5
-  padding_right=5
-  icon.font="SF Pro:Semibold:15.0"
-  label.font="SF Pro:Semibold:13.0"
-  icon.color="$SUBTEXT0"
-  label.color="$SUBTEXT0"
-  icon.padding_left=5
-  icon.padding_right=5
-  label.padding_left=5
-  label.padding_right=5
-  background.height=24
+	padding_left=5
+	padding_right=5
+	icon.font="SF Pro:Semibold:15.0"
+	label.font="SF Pro:Semibold:13.0"
+	icon.color="$SUBTEXT0"
+	label.color="$SUBTEXT0"
+	icon.padding_left=5
+	icon.padding_right=5
+	label.padding_left=5
+	label.padding_right=5
+	background.height=28
+	background.corner_radius=7
 
 )
 sketchybar --default "${default[@]}"
 
 ##### Left #####
 source "$ITEM_DIR/menu.sh"
+source "$ITEM_DIR/space.sh"
 
 ##### Center #####
-
+source "$ITEM_DIR/front_app.sh"
+source "$ITEM_DIR/media.sh"
 ##### Right #####
 source "$ITEM_DIR/clock.sh"
+source "$ITEM_DIR/battery.sh"
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
