@@ -112,6 +112,7 @@ source $ZSH/oh-my-zsh.sh
 
 # -- fzf --
 eval "$(fzf --zsh)"
+source ~/.config/fzf-git.sh/fzf-git.sh
 # -- Use fd instead of fzf --
 
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
@@ -136,6 +137,7 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 # Advanced customization of fzf options via _fzf_comprun function
 # - The first argument to the function is the name of the command.
 # - You should make sure to pass the rest of the arguments to fzf.
+
 _fzf_comprun() {
   local command=$1
   shift
