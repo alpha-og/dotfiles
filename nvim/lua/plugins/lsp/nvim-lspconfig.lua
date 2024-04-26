@@ -189,7 +189,7 @@ local config = function()
 				css = { prettier_d },
 				c = { clangformat, cpplint },
 				cpp = { clangformat, cpplint },
-				astro = { prettier },
+				astro = { prettier_d },
 			},
 		},
 	})
