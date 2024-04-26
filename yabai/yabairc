@@ -31,4 +31,4 @@ yabai -m config external_bar all:37:0
 # disable yabai on these apps
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
-yabai -m rule --add app="^Discord$" manage=off
+# yabai -m rule --add app="^Discord$" manage=off
