@@ -31,4 +31,16 @@ yabai -m config external_bar all:37:0
 # disable yabai on these apps
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
-# yabai -m rule --add app="^Discord$" manage=off
+
+# Music
+yabai -m rule --add app="^(Spotify|Amazon Music|Music)$" space=1
+# Mail, Settings
+yabai -m rule --add app="^(Mail|System Settings)$" space=1
+# Terminal
+yabai -m rule --add app="^(iTerm2|Terminal)$" space=2
+# Web browsers
+yabai -m rule --add app="^(Google Chrome|Firefox|Arc)$" space=3
+# Social
+yabai -m rule --add app="^(Slack|WhatsApp|Microsoft Teams|Discord)$" space=4
+# Finder
+yabai -m rule --add app="^(Finder)$" space=5
