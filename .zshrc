@@ -155,3 +155,6 @@ alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time
 
 # ---- bat (better cat) ----
  export BAT_THEME="Catppuccin Mocha"
+
+# direnv
+# eval "$(direnv hook bash)"
