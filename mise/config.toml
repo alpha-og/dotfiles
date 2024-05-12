@@ -1,0 +1,4 @@
+[tools]
+node = "latest"
+flutter = "latest"
+python = "3.11"
