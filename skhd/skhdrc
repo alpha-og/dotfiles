@@ -18,7 +18,7 @@ shift + ctrl - y : yabai -m space --mirror y-axis
 shift + ctrl - x : yabai -m space --mirror x-axis
 
 # toggle window float
-shift + ctrl - t : yabai -m window --toggle float --grid 4:4:1:1:2:2
+shift + ctrl - f : yabai -m window --toggle float --grid 4:4:1:1:2:2
 
 # maximize a window
 shift + alt - m : yabai -m window --toggle zoom-fullscreen
