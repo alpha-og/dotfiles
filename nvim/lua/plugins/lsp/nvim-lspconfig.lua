@@ -121,6 +121,19 @@ local config = function()
 		filetypes = { "astro" },
 	})
 
+	-- rust
+	lspconfig.rust_analyzer.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "rust" },
+		-- root_dir = util.root_pattern("Cargo.toml"),
+		settings = {
+			["rust-analyzer"] = {
+				allFeatures = true,
+			},
+		},
+	})
+
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
 	local flake8 = require("efmls-configs.linters.flake8")
@@ -159,6 +172,7 @@ local config = function()
 			"css",
 			"c",
 			"cpp",
+			"rust",
 		},
 		init_options = {
 			documentFormatting = true,
@@ -190,6 +204,7 @@ local config = function()
 				c = { clangformat, cpplint },
 				cpp = { clangformat, cpplint },
 				astro = { prettier_d },
+				rust = {},
 			},
 		},
 	})
