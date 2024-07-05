@@ -6,4 +6,4 @@ sketchybar --add item front_app center \
 	icon.color="$TEXT" \
 	label.color="$TEXT" \
 	script="$PLUGIN_DIR/front_app.sh" \
-	--subscribe front_app front_app_switched
+	--subscribe front_app front_app_switched music_change
