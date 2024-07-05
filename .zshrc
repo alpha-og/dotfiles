@@ -158,3 +158,11 @@ alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time
 
 # direnv
 # eval "$(direnv hook bash)"
+
+# pnpm
+export PNPM_HOME="/Users/athulanoop/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
