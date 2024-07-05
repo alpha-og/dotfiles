@@ -26,7 +26,7 @@ yabai -m config mouse_action2 resize
 yabai -m mouse_drop_action swap
 
 # tell yabai that I'm using a custom menubar
-yabai -m config external_bar all:37:0
+# yabai -m config external_bar all:37:0
 
 # disable yabai on these apps
 yabai -m rule --add app="^System Settings$" manage=off
