@@ -4,7 +4,7 @@ local opt = vim.opt -- reference variable to the global vim.opt object
 opt.tabstop = 4
 opt.shiftwidth = 4
 opt.softtabstop = 4
-opt.expandtab = true
+-- opt.expandtab = true
 opt.smartindent = true
 
 -- Line wrapping
@@ -58,4 +58,3 @@ opt.foldlevel = 99
 
 -- copilot filetypes
 vim.g.copilot_filetypes = { markdown = true, mdx = true }
-
