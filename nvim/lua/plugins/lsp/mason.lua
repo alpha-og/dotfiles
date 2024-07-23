@@ -29,6 +29,7 @@ local config = function()
 			"clangd",
 			"bashls",
 			"jsonls",
+			"rust_analyzer",
 		},
 		-- auto-install configured servers (with lspconfig)
 		automatic_installation = true, -- not the same as ensure_installed
@@ -50,6 +51,7 @@ local config = function()
 			"clang-format", -- c/cpp formatter
 			"ast-grep",
 			"alex", -- markdown linter
+			"codelldb", -- lldb debugger
 		},
 		auto_update = true,
 	})
