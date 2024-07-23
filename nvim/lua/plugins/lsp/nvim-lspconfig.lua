@@ -144,6 +144,7 @@ local config = function()
 	local fixjson = require("efmls-configs.formatters.fixjson")
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt = require("efmls-configs.formatters.shfmt")
+	-- local ast_grep = require("efmls-configs.linters.ast_grep")
 	-- local hadolint = require("efmls-configs.linters.hadolint")
 	-- local solhint = require("efmls-configs.linters.solhint")
 	local cpplint = require("efmls-configs.linters.cpplint")
@@ -165,7 +166,7 @@ local config = function()
 			-- "vue",
 			"markdown",
 			"mdx",
-			-- "docker",
+			"docker",
 			-- "solidity",
 			"html",
 			"astro",
@@ -201,7 +202,7 @@ local config = function()
 				-- solidity = { solhint },
 				html = { prettier_d },
 				css = { prettier_d },
-				c = { clangformat, cpplint },
+				c = { clangformat },
 				cpp = { clangformat, cpplint },
 				astro = { prettier_d },
 				rust = {},
