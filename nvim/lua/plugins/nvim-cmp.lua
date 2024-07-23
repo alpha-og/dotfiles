@@ -26,9 +26,9 @@ local config = function()
 		sources = cmp.config.sources({
 			{ name = "nvim_lsp" }, -- lsp
 			{ name = "luasnip" }, -- snippets
+			{ name = "path" }, -- file system paths
             { name = "supermaven"}, -- supermaven code assistant
 			{ name = "buffer" }, -- text within current buffer
-			{ name = "path" }, -- file system paths
 
 		}),
 		-- configure lspkind for vs-code like icons
