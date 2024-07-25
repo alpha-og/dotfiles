@@ -34,6 +34,7 @@ local config = function()
 			"xml",
 			"http",
 			"graphql",
+			"java"
 		},
 		auto_install = true,
 		highlight = {

@@ -134,13 +134,20 @@ local config = function()
 		},
 	})
 
+	-- java
+	lspconfig.jdtls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "java" },
+	})
+
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
 	local flake8 = require("efmls-configs.linters.flake8")
 	local black = require("efmls-configs.formatters.black")
 	local eslint = require("efmls-configs.linters.eslint")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
-	local prettier = require("efmls-configs.formatters.prettier")
+	-- local prettier = require("efmls-configs.formatters.prettier")
 	local fixjson = require("efmls-configs.formatters.fixjson")
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt = require("efmls-configs.formatters.shfmt")
@@ -174,6 +181,7 @@ local config = function()
 			"c",
 			"cpp",
 			"rust",
+			"java",
 		},
 		init_options = {
 			documentFormatting = true,
@@ -206,6 +214,7 @@ local config = function()
 				cpp = { clangformat, cpplint },
 				astro = { prettier_d },
 				rust = {},
+				java = {},
 			},
 		},
 	})
@@ -224,6 +233,12 @@ return {
 		{
 			"antosha417/nvim-lsp-file-operations",
 			config = true,
+		},
+		{
+			"nvim-java/nvim-java",
+			config = function()
+				require("java").setup({})
+			end,
 		},
 	},
 	config = config,
