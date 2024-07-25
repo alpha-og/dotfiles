@@ -154,6 +154,7 @@ _fzf_comprun() {
 alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
 
 # ---- bat (better cat) ----
+alias cat="bat"
  export BAT_THEME="Catppuccin Mocha"
 
 # direnv
@@ -166,3 +167,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# Created by `pipx` on 2024-07-24 01:07:38
+export PATH="$PATH:/Users/athulanoop/.local/bin"
