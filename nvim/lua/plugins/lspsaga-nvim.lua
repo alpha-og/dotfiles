@@ -1,4 +1,3 @@
-local mapkey = require("utils/keymapper").mapvimkey
 return {
 	"nvimdev/lspsaga.nvim",
 	dependencies = {

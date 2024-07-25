@@ -1,6 +1,3 @@
--- local keymap = vim.keymap -- for conciseness
-local mapkey = require("utils/keymapper").mapvimkey
-
 local M = {}
 
 M.on_attach = function(client, bufnr)
@@ -47,32 +44,95 @@ M.on_attach = function(client, bufnr)
 	-- keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
 
 	-- lspsaga keymaps
-	mapkey("n", "<leader>fd", "Lspsaga finder", { desc = "Open lspsaga finder", buffer = bufnr }) -- open lsp saga finder
-	mapkey("n", "gd", "Lspsaga peek_definition", { desc = "Peak definition", buffer = bufnr }) -- peak definition
-	mapkey("n", "gD", "Lspsaga goto_definition", { desc = "Go to definition", buffer = bufnr }) -- go to definition
-	mapkey("n", "<leader>ca", "Lspsaga code_action", { desc = "See available code actions", buffer = bufnr }) -- see available code actions
-	mapkey("n", "<leader>rn", "Lspsaga rename", { desc = "Smart rename", buffer = bufnr }) -- smart rename
-	mapkey("n", "<leader>dl", "Lspsaga show_line_diagnostics", { desc = "Show line diagnostics", buffer = bufnr }) -- show  diagnostics for line
-	mapkey("n", "<leader>dc", "Lspsaga show_cursor_diagnostics", { desc = "Show cursor diagnostics", buffer = bufnr }) -- show diagnostics for cursor
-	mapkey(
+	vim.keymap.set(
+		"n",
+		"<leader>fr",
+		"<CMD>Lspsaga finder<CR>",
+		{ noremap = true, silent = true, desc = "Open lspsaga finder", buffer = bufnr }
+	) -- open lsp saga finder
+	vim.keymap.set(
+		"n",
+		"gd",
+		"<CMD>Lspsaga peek_definition<CR>",
+		{ noremap = true, silent = true, desc = "Peak definition", buffer = bufnr }
+	) -- peak definition
+	vim.keymap.set(
+		"n",
+		"gD",
+		"<CMD>Lspsaga goto_definition<CR>",
+		{ noremap = true, silent = true, desc = "Go to definition", buffer = bufnr }
+	) -- go to definition
+	vim.keymap.set(
+		"n",
+		"<leader>ca",
+		"<CMD>Lspsaga code_action<CR>",
+		{ noremap = true, silent = true, desc = "See available code actions", buffer = bufnr }
+	) -- see available code actions
+	vim.keymap.set(
+		"n",
+		"<leader>rn",
+		"<CMD>Lspsaga rename<CR>",
+		{ noremap = true, silent = true, desc = "Smart rename", buffer = bufnr }
+	) -- smart rename
+	vim.keymap.set(
+		"n",
+		"<leader>dl",
+		"<CMD>Lspsaga show_line_diagnostics<CR>",
+		{ noremap = true, silent = true, desc = "Show line diagnostics", buffer = bufnr }
+	) -- show  diagnostics for line
+	vim.keymap.set(
+		"n",
+		"<leader>dc",
+		"<CMD>Lspsaga show_cursor_diagnostics<CR>",
+		{ noremap = true, silent = true, desc = "Show cursor diagnostics", buffer = bufnr }
+	) -- show diagnostics for cursor
+
+	vim.keymap.set(
 		"n",
 		"<leader>ds",
-		"Lspsaga diagnostic_jump_prev",
-		{ desc = "Jump to previous diagnostic in buffer", buffer = bufnr }
+		"<CMD>Lspsaga diagnostic_jump_prev<CR>",
+		{ noremap = true, silent = true, desc = "Jump to previous diagnostic in buffer", buffer = bufnr }
 	) -- jump to prev diagnostic in buffer
-	mapkey(
+
+	vim.keymap.set(
 		"n",
 		"<leader>dp",
-		"Lspsaga diagnostic_jump_next",
-		{ desc = "Jump to next diagnostic in buffer", buffer = bufnr }
+		"<CMD>Lspsaga diagnostic_jump_next<CR>",
+		{ noremap = true, silent = true, desc = "Jump to next diagnostic in buffer", buffer = bufnr }
 	) -- jump to next diagnostic in buffer
-	mapkey("n", "K", "Lspsaga hover_doc", { desc = "Show hover documentation" }) -- show documentation for what is under cursor
+
+	vim.keymap.set(
+		"n",
+		"K",
+		"<CMD>Lspsaga hover_doc<CR>",
+		{ noremap = true, silent = true, desc = "Show hover documentation" }
+	) -- show documentation for what is under cursor
 
 	if client.name == "pyright" then
-		mapkey("n", "<leader>oi", "PyrightOrganizeImports", { desc = "Organise python imports", buffer = bufnr }) -- organise imports
-		mapkey("n", "<leader>db", "DapToggleBreakpoint", { desc = "Add breakpoint", buffer = bufnr }) -- toggle breakpoint
-		mapkey("n", "<leader>dr", "DapContinue", { desc = "Invoke debugger", buffer = bufnr }) -- continue/invoke debugger
-		mapkey("n", "<leader>dt", "lua require('dap-python').test_method()", { desc = "Run tests", buffer = bufnr }) -- run tests
+		vim.keymap.set(
+			"n",
+			"<leader>oi",
+			"<CMD>PyrightOrganizeImports<CR>",
+			{ noremap = true, silent = true, desc = "Organise python imports", buffer = bufnr }
+		) -- organise imports
+		vim.keymap.set(
+			"n",
+			"<leader>db",
+			"<CMD>DapToggleBreakpoint<CR>",
+			{ noremap = true, silent = true, desc = "Add breakpoint", buffer = bufnr }
+		) -- toggle breakpoint
+		vim.keymap.set(
+			"n",
+			"<leader>dr",
+			"<CMD>DapContinue<CR>",
+			{ noremap = true, silent = true, desc = "Invoke debugger", buffer = bufnr }
+		) -- continue/invoke debugger
+		vim.keymap.set(
+			"n",
+			"<leader>dt",
+			"<CMD>lua require('dap-python').test_method()<CR>",
+			{ noremap = true, silent = true, desc = "Run tests", buffer = bufnr }
+		) -- run tests
 	end
 end
 

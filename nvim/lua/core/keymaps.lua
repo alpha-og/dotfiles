@@ -1,28 +1,27 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-local mapkey = require("utils/keymapper").mapvimkey
 local api = vim.api
 
 -- Buffer Navigation
-mapkey("n", "<S-l>", "bnext") -- Next buffer
-mapkey("n", "<S-h>", "bprevious") -- Prev buffer
-mapkey("n", "<leader>`", "e #") -- Switch to Other Buffer
+vim.keymap.set("n", "<S-l>", "<CMD>bnext<CR>", {noremap=true, silent=true, desc = "Next buffer" }) -- Next buffer
+vim.keymap.set("n", "<S-h>", "<CMD>bprevious<CR>", {noremap=true, silent=true, desc = "Prev buffer" }) -- Prev buffer
+vim.keymap.set("n", "<leader>o", "<CMD>e #<CR>", {noremap=true, silent=true, desc = "Switch to Other Buffer" }) -- Switch to Other Buffer
 
 -- Buffer Management
-mapkey("n", "<leader>bd", "lua MiniBufremove.delete()", { desc = "Delete active buffer" })
-mapkey("n", "<leader>bD", "lua MiniBufremove.delete(0,true)", { desc = "Force delete active buffer" })
--- mapkey("n",)
+vim.keymap.set("n", "<leader>bd", "<CMD>lua MiniBufremove.delete()<CR>", {noremap=true, silent=true, desc = "Delete active buffer" })
+vim.keymap.set("n", "<leader>bD", "<CMD>lua MiniBufremove.delete(0,true)<CR>", {noremap=true, silent=true, desc = "Force delete active buffer" })
+
 -- Pane and Window Navigation
 -- vim-tmux-navigator handles the keymaps by default with <C-h>, <C-j>, <C-k>, <C-l>
 
 -- Window Management
-mapkey("n", "<leader>\\", "vsplit") -- Split Vertically
-mapkey("n", "<leader>-", "split") -- Split Horizontally
-mapkey("n", "<S-C-Up>", "resize +2")
-mapkey("n", "<S-C-Down>", "resize -2")
-mapkey("n", "<S-C-Left>", "vertical resize +2")
-mapkey("n", "<S-C-Right>", "vertical resize -2")
+vim.keymap.set("n", "<leader>\\", "<CMD>vsplit<CR>", {noremap=true, silent=true, desc = "Split Vertically" }) -- Split Vertically
+vim.keymap.set("n", "<leader>-", "<CMD>split<CR>", {noremap=true, silent=true, desc = "Split Horizontally" }) -- Split Horizontally
+vim.keymap.set("n", "<S-C-Up>", "<CMD>resize +2<CR>", {noremap=true, silent=true ,desc = "Resize window up"})
+vim.keymap.set("n", "<S-C-Down>", "<CMD>resize -2<CR>", {noremap=true, silent=true, desc = "Resize window down"})
+vim.keymap.set("n", "<S-C-Left>", "<CMD>vertical resize +2<CR>", {noremap=true, silent=true, desc = "Resize window left"})
+vim.keymap.set("n", "<S-C-Right>", "<CMD>vertical resize -2<CR>", {noremap=true, silent=true, desc = "Resize window right"})
 
 -- Comments
 api.nvim_set_keymap("n", "<C-/>", "gtc", { noremap = false })
@@ -31,5 +30,3 @@ api.nvim_set_keymap("v", "<C-/>", "goc", { noremap = false })
 -- Indenting
 vim.keymap.set("v", "<", "<gv", { silent = true, noremap = true })
 vim.keymap.set("v", ">", ">gv", { silent = true, noremap = true })
-
-
