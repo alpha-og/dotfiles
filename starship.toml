@@ -4,6 +4,7 @@
 # disable blank line between shell prompts
 add_newline = false
 
+command_timeout = 1000
 # catppuccin color-scheme 
 palette = "catppuccin_mocha"
 
