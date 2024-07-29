@@ -54,5 +54,6 @@
   "vim-astro": { "branch": "main", "commit": "9b4674ecfe1dd84b5fb9b4de1653975de6e8e2e1" },
   "vim-illuminate": { "branch": "master", "commit": "5eeb7951fc630682c322e88a9bbdae5c224ff0aa" },
   "vim-tmux-navigator": { "branch": "master", "commit": "5b3c701686fb4e6629c100ed32e827edf8dad01e" },
-  "which-key.nvim": { "branch": "main", "commit": "058486e5b001f11ef48f180dd57ae3088f5bb6dc" }
+  "which-key.nvim": { "branch": "main", "commit": "058486e5b001f11ef48f180dd57ae3088f5bb6dc" },
+  "zellij-nav.nvim": { "branch": "main", "commit": "25930804397ef540bd2de62f9897bc2db61f9baa" }
 }
