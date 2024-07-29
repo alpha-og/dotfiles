@@ -39,7 +39,7 @@ _fzf_comprun() {
 }
 
 # ---- Eza (better ls) -----
-alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
+alias ls="eza --color=always --git --no-filesize --icons=always --no-time --no-user --no-permissions"
 
 # ---- bat (better cat) ----
 alias cat="bat"
@@ -64,3 +64,28 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # ---- starship ----
 eval "$(starship init zsh)"
 
+# ---- history ----
+HISTFILE=~/.zsh_history
+SAVEHIST=10000
+HISTSIZE=999
+
+setopt share_history
+setopt hist_ignore_dups
+setopt hist_expire_dups_first
+setopt hist_verify
+
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+
+# ---- auto-start zellij ----
+# eval "$(zellij setup --generate-auto-start zsh)"
+export ZELLIJ_AUTO_START=true
+if [[ -z "$ZELLIJ" ]]; then
+  if [[ "$ZELLIJ_AUTO_START" == "true" && "$TERM_PROGRAM" == "WezTerm" ]]; then
+    if command -v zellij &> /dev/null; then
+      zellij -l welcome 
+    else
+      echo "Zellij not found. Please install it."
+    fi
+  fi
+fi
