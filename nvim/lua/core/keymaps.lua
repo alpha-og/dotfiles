@@ -24,8 +24,8 @@ vim.keymap.set("n", "<S-C-Left>", "<CMD>vertical resize +2<CR>", {noremap=true, 
 vim.keymap.set("n", "<S-C-Right>", "<CMD>vertical resize -2<CR>", {noremap=true, silent=true, desc = "Resize window right"})
 
 -- Comments
-api.nvim_set_keymap("n", "<C-/>", "gtc", { noremap = false })
-api.nvim_set_keymap("v", "<C-/>", "goc", { noremap = false })
+api.nvim_set_keymap("n", "<leader>/", "gtc", { noremap = false })
+api.nvim_set_keymap("v", "<leader>/", "goc", { noremap = false })
 
 -- Indenting
 vim.keymap.set("v", "<", "<gv", { silent = true, noremap = true })
