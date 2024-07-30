@@ -14,10 +14,11 @@ $character\
 $username\
 $hostname\
 $localip\
+$directory\
+$fill\
 $shlvl\
 $singularity\
 $kubernetes\
-$directory\
 $vcsh\
 $fossil_branch\
 $fossil_metrics\
@@ -92,7 +93,6 @@ $crystal\
 $custom\
 $sudo\
 $cmd_duration\
-$line_break\
 $jobs\
 $battery\
 $time\
@@ -100,6 +100,7 @@ $status\
 $os\
 $container\
 $shell\
+$line_break\
 [└─❯ ](bold overlay0)"""
 
 
@@ -107,6 +108,9 @@ $shell\
 # Note the use of Catppuccin color 'maroon'
 success_symbol = "[\u2713](green)"
 error_symbol = "[\u2717](red)"
+
+[fill]
+symbol = "\u00B7"
 
 [directory]
 style = "bold lavender"
