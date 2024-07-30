@@ -135,11 +135,11 @@ local config = function()
 	})
 
 	-- java
-	lspconfig.jdtls.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-		filetypes = { "java" },
-	})
+	-- lspconfig.jdtls.setup({
+	-- 	capabilities = capabilities,
+	-- 	on_attach = on_attach,
+	-- 	filetypes = { "java" },
+	-- })
 
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
