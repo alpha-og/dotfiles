@@ -92,10 +92,7 @@ $env_var\
 $crystal\
 $custom\
 $sudo\
-$cmd_duration\
-$jobs\
-$battery\
-$time\
+$cmd_duration $jobs $time\
 $status\
 $os\
 $container\
@@ -110,7 +107,7 @@ success_symbol = "[\u2713](green)"
 error_symbol = "[\u2717](red)"
 
 [fill]
-symbol = "\u00B7"
+symbol = " "
 
 [directory]
 style = "bold lavender"
