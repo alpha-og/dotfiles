@@ -17,6 +17,9 @@ return {
 				["vim.lsp.util.stylize_markdown"] = true,
 				["cmp.entry.get_documentation"] = true,
 			},
+			hover = {
+				silent = true,
+			},
 		},
 		-- you can enable a preset for easier configuration
 		presets = {
@@ -34,22 +37,12 @@ return {
 		--   `nvim-notify` is only needed, if you want to use the notification view.
 		--   If not available, we use `mini` as the fallback
 		-- {
-		-- 	"rcarriga/nvim-notify",
+			-- "rcarriga/nvim-notify",
 		-- 	config = function()
 		-- 		local nvim_notify = require("notify")
 		-- 		nvim_notify.setup({
 		-- 			background_colour = "#000000",
 		-- 		})
-		-- 		local banned_messages = { "No information available" }
-		--
-		-- 		vim.notify = function(msg, ...)
-		-- 			for _, banned in ipairs(banned_messages) do
-		-- 				if msg == banned then
-		-- 					return
-		-- 				end
-		-- 			end
-		-- 			nvim_notify(msg, ...)
-		-- 		end
 		-- 	end,
 		-- },
 	},

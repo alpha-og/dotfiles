@@ -135,11 +135,19 @@ local config = function()
 	})
 
 	-- java
-	-- lspconfig.jdtls.setup({
-	-- 	capabilities = capabilities,
-	-- 	on_attach = on_attach,
-	-- 	filetypes = { "java" },
-	-- })
+	lspconfig.jdtls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "java" },
+		handlers = {
+			["language/status"] = function(_, result)
+				-- Print or whatever.
+			end,
+			["$/progress"] = function(_, result, ctx)
+				-- disable progress updates.
+			end,
+		},
+	})
 
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
@@ -236,9 +244,6 @@ return {
 		},
 		{
 			"nvim-java/nvim-java",
-			config = function()
-				require("java").setup({})
-			end,
 		},
 	},
 	config = config,
