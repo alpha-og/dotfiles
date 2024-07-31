@@ -1,3 +1,7 @@
+# -- sdkman --
+export SDKMAN_DIR=$(brew --prefix sdkman-cli)/libexec
+[[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh"
+
 # -- fzf --
 eval "$(fzf --zsh)"
 source ~/.config/fzf-git.sh/fzf-git.sh
