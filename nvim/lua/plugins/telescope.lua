@@ -14,7 +14,7 @@ local config = function()
 			find_files = {
 				-- theme = "dropdown",
 				previewer = true,
-				hidden = false, -- toggle hidden files from appearing in telescope file search
+				hidden = true, -- toggle hidden files from appearing in telescope file search
 			},
 			live_grep = {
 				-- theme = "dropdown",
