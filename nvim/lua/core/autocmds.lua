@@ -1,15 +1,26 @@
 -- auto-format on save
 local lsp_fmt_group = vim.api.nvim_create_augroup("LspFormattingGroup", {})
-vim.api.nvim_create_autocmd("BufWritePost", {
+vim.api.nvim_create_autocmd("BufWritePre", {
 	group = lsp_fmt_group,
 	callback = function()
-		local efm = vim.lsp.get_active_clients({ name = "efm" })
-
-		if vim.tbl_isempty(efm) then
+		if vim.lsp.get_clients then
+			local efm = vim.lsp.get_clients({ name = "efm" })
+			-- local ast_grep = vim.lsp.get_clients({ name = "ast_grep" })
+			-- local biome = vim.lsp.get_clients({ name = "biome" })
+			if not vim.tbl_isempty(efm) then
+				if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
+					return vim.lsp.buf.format({ name = "efm", async = true })
+				else
+					return vim.lsp.buf.format({ name = "efm", async = false })
+				end
+				-- elseif not vim.tbl_isempty(ast_grep) then
+				-- 	return vim.lsp.buf.format({ name = "ast_grep", async = false })
+				-- elseif not vim.tbl_isempty(biome) then
+				-- 	vim.lsp.buf.format({ name = "biome", async = false })
+			end
+		else
 			return
 		end
-
-		vim.lsp.buf.format({ name = "efm", async = false })
 	end,
 })
 

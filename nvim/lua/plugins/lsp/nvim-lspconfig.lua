@@ -12,6 +12,11 @@ local config = function()
 		local hl = "DiagnosticSign" .. type
 		vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 	end
+	-- biome
+	-- lspconfig.biome.setup({
+	-- 	capabilities = capabilities,
+	-- 	on_attach = on_attach,
+	-- })
 
 	-- tailwind
 	lspconfig.tailwindcss.setup({})
@@ -67,7 +72,12 @@ local config = function()
 		},
 	})
 
-	-- typescript
+	-- lspconfig.ast_grep.setup({
+	-- 	capabilities = capabilities,
+	-- 	on_attach = on_attach,
+	-- 	filetypes = { "c", "cpp" },
+	-- })
+	-- -- typescript
 	lspconfig.tsserver.setup({
 		on_attach = on_attach,
 		capabilities = capabilities,
@@ -108,10 +118,6 @@ local config = function()
 	lspconfig.clangd.setup({
 		capabilities = capabilities,
 		on_attach = on_attach,
-		cmd = {
-			"clangd",
-			"--offset-encoding=utf-16",
-		},
 	})
 
 	-- astro
@@ -155,7 +161,7 @@ local config = function()
 	local black = require("efmls-configs.formatters.black")
 	local eslint = require("efmls-configs.linters.eslint")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
-	-- local prettier = require("efmls-configs.formatters.prettier")
+	-- local prettier= require("efmls-configs.formatters.prettier")
 	local fixjson = require("efmls-configs.formatters.fixjson")
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt = require("efmls-configs.formatters.shfmt")
@@ -186,10 +192,10 @@ local config = function()
 			"html",
 			"astro",
 			"css",
-			"c",
-			"cpp",
 			"rust",
 			"java",
+			"c",
+			"cpp",
 		},
 		init_options = {
 			documentFormatting = true,
@@ -203,10 +209,10 @@ local config = function()
 			languages = {
 				lua = { luacheck, stylua },
 				python = { flake8, black },
-				typescript = { eslint, prettier_d },
-				json = { eslint, fixjson },
-				jsonc = { eslint, fixjson },
+				json = { eslint, prettier_d },
+				jsonc = { eslint, prettier_d },
 				sh = { shellcheck, shfmt },
+				typescript = { eslint, prettier_d },
 				javascript = { eslint, prettier_d },
 				javascriptreact = { eslint, prettier_d },
 				typescriptreact = { eslint, prettier_d },
@@ -218,11 +224,11 @@ local config = function()
 				-- solidity = { solhint },
 				html = { prettier_d },
 				css = { prettier_d },
-				c = { clangformat },
-				cpp = { clangformat, cpplint },
 				astro = { prettier_d },
 				rust = {},
 				java = {},
+				c = { clangformat },
+				cpp = { cpplint, clangformat },
 			},
 		},
 	})
