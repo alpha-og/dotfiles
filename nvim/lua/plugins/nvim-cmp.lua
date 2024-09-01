@@ -27,9 +27,9 @@ local config = function()
 			{ name = "nvim_lsp" }, -- lsp
 			{ name = "luasnip" }, -- snippets
 			{ name = "path" }, -- file system paths
-            { name = "supermaven"}, -- supermaven code assistant
+			{ name = "supermaven" }, -- supermaven code assistant
+			{ name = "crates" }, -- crates.io
 			{ name = "buffer" }, -- text within current buffer
-
 		}),
 		-- configure lspkind for vs-code like icons
 		formatting = {
