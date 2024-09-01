@@ -89,6 +89,10 @@ local config = function()
 		},
 		root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
 	})
+	lspconfig.eslint.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+	})
 
 	-- bash
 	lspconfig.bashls.setup({
@@ -136,6 +140,9 @@ local config = function()
 		settings = {
 			["rust-analyzer"] = {
 				allFeatures = true,
+				procMacro = {
+					enable = true,
+				},
 			},
 		},
 	})
@@ -159,16 +166,16 @@ local config = function()
 	local stylua = require("efmls-configs.formatters.stylua")
 	local flake8 = require("efmls-configs.linters.flake8")
 	local black = require("efmls-configs.formatters.black")
-	local eslint = require("efmls-configs.linters.eslint")
+	local eslint_d = require("efmls-configs.linters.eslint_d")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
 	-- local prettier= require("efmls-configs.formatters.prettier")
-	local fixjson = require("efmls-configs.formatters.fixjson")
+	-- local fixjson = require("efmls-configs.formatters.fixjson")
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt = require("efmls-configs.formatters.shfmt")
 	-- local ast_grep = require("efmls-configs.linters.ast_grep")
 	-- local hadolint = require("efmls-configs.linters.hadolint")
 	-- local solhint = require("efmls-configs.linters.solhint")
-	local cpplint = require("efmls-configs.linters.cpplint")
+	-- local cpplint = require("efmls-configs.linters.cpplint")
 	local clangformat = require("efmls-configs.formatters.clang_format")
 	local alex = require("efmls-configs.linters.alex")
 	-- configure efm server
@@ -209,13 +216,13 @@ local config = function()
 			languages = {
 				lua = { luacheck, stylua },
 				python = { flake8, black },
-				json = { eslint, prettier_d },
-				jsonc = { eslint, prettier_d },
+				json = { eslint_d, prettier_d },
+				jsonc = { eslint_d, prettier_d },
 				sh = { shellcheck, shfmt },
-				typescript = { eslint, prettier_d },
-				javascript = { eslint, prettier_d },
-				javascriptreact = { eslint, prettier_d },
-				typescriptreact = { eslint, prettier_d },
+				typescript = { eslint_d, prettier_d },
+				javascript = { eslint_d, prettier_d },
+				javascriptreact = { eslint_d, prettier_d },
+				typescriptreact = { eslint_d, prettier_d },
 				-- svelte = { eslint, prettier_d },
 				-- vue = { eslint, prettier_d },
 				markdown = { alex, prettier_d },
@@ -228,7 +235,7 @@ local config = function()
 				rust = {},
 				java = {},
 				c = { clangformat },
-				cpp = { cpplint, clangformat },
+				cpp = { clangformat },
 			},
 		},
 	})

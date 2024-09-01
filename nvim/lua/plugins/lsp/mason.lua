@@ -16,6 +16,7 @@ local config = function()
 		-- list of lsp for mason to install
 		ensure_installed = {
 			"tsserver",
+			"eslint",
 			"html",
 			"cssls",
 			"tailwindcss",
