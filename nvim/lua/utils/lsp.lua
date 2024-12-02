@@ -1,6 +1,7 @@
 local M = {}
 
 M.on_attach = function(client, bufnr)
+	vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 	-- local opts = { noremap = true, silent = true, buffer = bufnr }
 
 	-- native vim lsp + telescope keybinds
