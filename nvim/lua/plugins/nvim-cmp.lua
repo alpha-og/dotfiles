@@ -34,7 +34,11 @@ local config = function()
 		-- configure lspkind for vs-code like icons
 		formatting = {
 			format = lspkind.cmp_format({
+				mode = "symbol",
 				maxwidth = 50,
+				-- symbol_map = {
+				-- 	Supermaven = " ",
+				-- },
 				ellipsis_char = "...",
 			}),
 		},
