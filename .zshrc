@@ -1,7 +1,3 @@
-# -- sdkman --
-export SDKMAN_DIR=$(brew --prefix sdkman-cli)/libexec
-[[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh"
-
 # -- fzf --
 eval "$(fzf --zsh)"
 source ~/.config/fzf-git.sh/fzf-git.sh
@@ -93,3 +89,7 @@ if [[ -z "$ZELLIJ" ]]; then
     fi
   fi
 fi
+
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export NDK_HOME="$ANDROID_HOME/ndk/27.1.12297006"
