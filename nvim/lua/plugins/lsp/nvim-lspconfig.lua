@@ -78,7 +78,7 @@ local config = function()
 	-- 	filetypes = { "c", "cpp" },
 	-- })
 	-- -- typescript
-	lspconfig.tsserver.setup({
+	lspconfig.ts_ls.setup({
 		on_attach = on_attach,
 		capabilities = capabilities,
 		filetypes = {
@@ -136,13 +136,9 @@ local config = function()
 		capabilities = capabilities,
 		on_attach = on_attach,
 		filetypes = { "rust" },
-		-- root_dir = util.root_pattern("Cargo.toml"),
 		settings = {
 			["rust-analyzer"] = {
-				allFeatures = true,
-				procMacro = {
-					enable = true,
-				},
+				features = "all",
 			},
 		},
 	})
@@ -160,6 +156,12 @@ local config = function()
 				-- disable progress updates.
 			end,
 		},
+	})
+
+	-- go
+	lspconfig.gopls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
 	})
 
 	local luacheck = require("efmls-configs.linters.luacheck")
@@ -190,7 +192,7 @@ local config = function()
 			"javascriptreact",
 			"typescript",
 			"typescriptreact",
-			-- "svelte",
+			"svelte",
 			-- "vue",
 			"markdown",
 			"mdx",
@@ -223,7 +225,7 @@ local config = function()
 				javascript = { eslint_d, prettier_d },
 				javascriptreact = { eslint_d, prettier_d },
 				typescriptreact = { eslint_d, prettier_d },
-				-- svelte = { eslint, prettier_d },
+				svelte = { eslint_d, prettier_d },
 				-- vue = { eslint, prettier_d },
 				markdown = { alex, prettier_d },
 				mdx = { alex, prettier_d },
@@ -232,7 +234,7 @@ local config = function()
 				html = { prettier_d },
 				css = { prettier_d },
 				astro = { prettier_d },
-				rust = {},
+				rust = { { formatCommand = "rustfmt --edition 2021 --emit=stdout", formatStdin = true } },
 				java = {},
 				c = { clangformat },
 				cpp = { clangformat },

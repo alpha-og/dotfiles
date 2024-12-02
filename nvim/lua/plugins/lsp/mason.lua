@@ -15,15 +15,16 @@ local config = function()
 	mason_lspconfig.setup({
 		-- list of lsp for mason to install
 		ensure_installed = {
-			"tsserver",
+			"ts_ls",
 			"eslint",
 			"html",
 			"cssls",
 			"tailwindcss",
-			-- "svelte",
+			"svelte",
 			"lua_ls",
 			-- "graphql",
 			"emmet_ls",
+			"gopls",
 			-- "prismals",
 			"pyright",
 			"astro",
