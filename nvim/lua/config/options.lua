@@ -55,3 +55,6 @@ opt.showmode = false
 opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.foldlevel = 99
+
+-- make command line go away
+opt.cmdheight = 0
