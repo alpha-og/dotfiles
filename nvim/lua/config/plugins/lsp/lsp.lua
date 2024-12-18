@@ -1,8 +1,82 @@
+local create_lsp_keymaps = function()
+	local telescope_builtin = require("telescope.builtin")
+	vim.api.nvim_create_autocmd("LspAttach", {
+		callback = function(event)
+			local opts = { buffer = event.buf, noremap = true, silent = true }
+			opts.desc = "Hover"
+			vim.keymap.set("n", "K", function()
+				vim.lsp.buf.hover()
+			end, opts)
+			opts.desc = "Go to Definition"
+			-- vim.keymap.set("n", "gd", function()
+			-- 	vim.lsp.buf.definition()
+			-- end, opts)
+			vim.keymap.set("n", "<leader>gd", telescope_builtin.lsp_definitions, opts)
+			opts.desc = "Declaration"
+			vim.keymap.set("n", "gD", function()
+				vim.lsp.buf.declaration()
+			end, opts)
+			opts.desc = "Go to Implementation"
+			-- vim.keymap.set("n", "gi", function()
+			-- 	vim.lsp.buf.implementation()
+			-- end, opts)
+			vim.keymap.set("n", "<leader>gi", telescope_builtin.lsp_implementations, opts)
+			opts.desc = "Go to Type Definition"
+			-- vim.keymap.set("n", "go", function()
+			-- 	vim.lsp.buf.type_definition()
+			-- end, opts)
+			vim.keymap.set("n", "<leader>gt", telescope_builtin.lsp_type_definitions, opts)
+			opts.desc = "List LSP references for the word under the cursor"
+			-- vim.keymap.set("n", "gr", function()
+			-- 	vim.lsp.buf.references()
+			-- end, opts)
+			vim.keymap.set("n", "<leader>gr", telescope_builtin.lsp_references, opts)
+			opts.desc = "Signature Help"
+			vim.keymap.set("n", "gs", function()
+				vim.lsp.buf.signature_help()
+			end, opts)
+			opts.desc = "Rename"
+			vim.keymap.set("n", "<F2>", function()
+				vim.lsp.buf.rename()
+			end, opts)
+			opts.desc = "Format"
+			vim.keymap.set({ "n", "x" }, "<F3>", function()
+				vim.lsp.buf.format({ async = true })
+			end, opts)
+			opts.desc = "Show Code Actions"
+			-- vim.keymap.set("n", "ca", function()
+			-- 	vim.lsp.buf.code_action()
+			-- end, opts)
+			vim.keymap.set("n", "<leader>ca", "<CMD>Lspsaga code_action<CR>", opts)
+			opts.desc = "Show line diagnostics"
+			vim.keymap.set("n", "<leader>dl", vim.diagnostic.open_float, opts)
+			opts.desc = "List Diagnostics for current buffer"
+			vim.keymap.set("n", "<leader>db", function()
+				telescope_builtin.diagnostics({ bufnr = 0 })
+			end, opts)
+			opts.desc = "List Diagnostics for all buffers"
+			vim.keymap.set("n", "<leader>dw", telescope_builtin.diagnostics, opts)
+			opts.desc = "Go to Next Diagnostic"
+			vim.keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, opts)
+			opts.desc = "Go to Prev Diagnostic"
+			vim.keymap.set("n", "<leader>dp", vim.diagnostic.goto_prev, opts)
+		end,
+	})
+end
+
 local config = function()
+	create_lsp_keymaps()
 	local lspconfig = require("lspconfig")
+
 	-- Reserve a space in the gutter
 	-- This will avoid an annoying layout shift in the screen
 	vim.opt.signcolumn = "yes"
+
+	vim.diagnostic.config({
+		float = {
+			border = "rounded",
+		},
+	})
 
 	-- Add cmp_nvim_lsp capabilities settings to lspconfig
 	-- This should be executed before you configure any language server
@@ -12,23 +86,6 @@ local config = function()
 
 	-- This is where you enable features that only work
 	-- if there is a language server active in the file
-	vim.api.nvim_create_autocmd("LspAttach", {
-		desc = "LSP actions",
-		callback = function(event)
-			local opts = { buffer = event.buf }
-
-			vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-			vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-			vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-			vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-			vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-			vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-			vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-			vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-			vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-			vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-		end,
-	})
 
 	-- Change the Diagnostic symbols in the sign column (gutter)
 	local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
@@ -36,25 +93,17 @@ local config = function()
 		local hl = "DiagnosticSign" .. type
 		vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 	end
-	-- biome
-	-- lspconfig.biome.setup({
-	-- 	capabilities = capabilities,
-	-- 	on_attach = on_attach,
-	-- })
 
 	-- tailwind
 	lspconfig.tailwindcss.setup({})
 
 	-- mdx and markdown
 	lspconfig.marksman.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		filetypes = { "mdx", "markdown" },
 	})
+
 	-- lua
 	lspconfig.lua_ls.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		settings = { -- custom settings for lua
 			Lua = {
 				-- make the language server recognize "vim" global
@@ -74,15 +123,11 @@ local config = function()
 
 	-- json
 	lspconfig.jsonls.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		filetypes = { "json", "jsonc" },
 	})
 
 	-- python
 	lspconfig.pyright.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		settings = {
 			pyright = {
 				disableOrganizeImports = false,
@@ -95,16 +140,8 @@ local config = function()
 			},
 		},
 	})
-
-	-- lspconfig.ast_grep.setup({
-	-- 	capabilities = capabilities,
-	-- 	on_attach = on_attach,
-	-- 	filetypes = { "c", "cpp" },
-	-- })
 	-- -- typescript
 	lspconfig.ts_ls.setup({
-		on_attach = on_attach,
-		capabilities = capabilities,
 		filetypes = {
 			"typescript",
 			"javascript",
@@ -113,22 +150,15 @@ local config = function()
 		},
 		root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
 	})
-	lspconfig.eslint.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-	})
+	lspconfig.eslint.setup({})
 
 	-- bash
 	lspconfig.bashls.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		filetypes = { "sh", "aliasrc" },
 	})
 
 	-- typescriptreact, javascriptreact, css, sass, scss, less, svelte, vue
 	lspconfig.emmet_ls.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		filetypes = {
 			"typescriptreact",
 			"javascriptreact",
@@ -143,22 +173,15 @@ local config = function()
 	})
 
 	-- C/C++
-	lspconfig.clangd.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-	})
+	lspconfig.clangd.setup({})
 
 	-- astro
 	lspconfig.astro.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		filetypes = { "astro" },
 	})
 
 	-- rust
 	lspconfig.rust_analyzer.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
 		filetypes = { "rust" },
 		settings = {
 			["rust-analyzer"] = {
@@ -168,19 +191,17 @@ local config = function()
 	})
 
 	-- java
-	lspconfig.jdtls.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-		filetypes = { "java" },
-		handlers = {
-			["language/status"] = function(_, result)
-				-- Print or whatever.
-			end,
-			["$/progress"] = function(_, result, ctx)
-				-- disable progress updates.
-			end,
-		},
-	})
+	-- lspconfig.jdtls.setup({
+	-- 	filetypes = { "java" },
+	-- 	handlers = {
+	-- 		["language/status"] = function(_, result)
+	-- 			-- Print or whatever.
+	-- 		end,
+	-- 		["$/progress"] = function(_, result, ctx)
+	-- 			-- disable progress updates.
+	-- 		end,
+	-- 	},
+	-- })
 
 	-- go
 	-- lspconfig.gopls.setup({
@@ -244,11 +265,8 @@ local config = function()
 				javascriptreact = { eslint_d, prettier_d },
 				typescriptreact = { eslint_d, prettier_d },
 				svelte = { eslint_d, prettier_d },
-				-- vue = { eslint, prettier_d },
 				markdown = { alex, prettier_d },
 				mdx = { alex, prettier_d },
-				-- docker = { hadolint, prettier_d },
-				-- solidity = { solhint },
 				html = { prettier_d },
 				css = { prettier_d },
 				astro = { prettier_d },
