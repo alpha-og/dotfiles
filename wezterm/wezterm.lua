@@ -26,5 +26,12 @@ config.macos_window_background_blur = 25
 
 -- disable window close confirmation
 config.window_close_confirmation = "NeverPrompt"
+
+-- remove bottom padding on the window
+config.window_padding = {
+    bottom = 0,
+}
+
+config.use_resize_increments = true
 -- return the configuration
 return config
