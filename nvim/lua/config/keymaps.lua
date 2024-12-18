@@ -24,3 +24,9 @@ vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz", { desc = "Next match" })
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Previous match" })
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Next match" })
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Previous match" })
+
+-- open terminal
+vim.keymap.set("n", "<leader>tn", function()
+	vim.cmd.vnew()
+	vim.cmd.terminal()
+end, { desc = "Open terminal in a vertical split" })
