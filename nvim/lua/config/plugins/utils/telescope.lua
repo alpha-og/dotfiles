@@ -23,14 +23,14 @@ local config = function()
 				case_mode = "smart_case", -- or "ignore_case" or "respect_case"
 			},
 			noice = {},
-            lazy_plugins = {},
+			lazy_plugins = {},
 		},
 	})
 
 	-- load extensions
 	telescope.load_extension("fzf")
 	telescope.load_extension("noice")
-    telescope.load_extension("lazy_plugins")
+	telescope.load_extension("lazy_plugins")
 end
 
 return {
@@ -53,6 +53,6 @@ return {
 		{ "<leader>ff", require("telescope.builtin").find_files, desc = "Find files" },
 		{ "<leader>fg", require("telescope.builtin").live_grep, desc = "Grep search" },
 		{ "<leader>fb", require("telescope.builtin").buffers, desc = "Find buffers" },
-        { "<leader>tp", "<CMD>Telescope lazy_plugins<CR>", desc = "Lazy plugins" },
+		{ "<leader>lp", "<CMD>Telescope lazy_plugins<CR>", desc = "Lazy plugins" },
 	},
 }
