@@ -1,3 +1,5 @@
+-- super fast copilot
+
 return {
 	"supermaven-inc/supermaven-nvim",
 	commit = "d7125",
