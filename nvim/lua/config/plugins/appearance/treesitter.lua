@@ -1,4 +1,5 @@
 -- provides highlighting for available languages
+
 local ensure_installed = {
 	-- languages
 	"rust",
@@ -24,12 +25,12 @@ local ensure_installed = {
 	"xml",
 	"dockerfile",
 	"http",
-    -- vim help
-    "vimdoc",
+	-- vim help
+	"vimdoc",
 }
 local config = function()
 	require("nvim-treesitter.configs").setup({
-	ensure_installed = ensure_installed,
+		ensure_installed = ensure_installed,
 		auto_install = true,
 		highlight = {
 			enable = true,
@@ -47,9 +48,8 @@ local config = function()
 	})
 end
 
-
 return {
 	"nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    config = config,
+	build = ":TSUpdate",
+	config = config,
 }

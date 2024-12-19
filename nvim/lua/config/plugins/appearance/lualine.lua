@@ -1,4 +1,5 @@
 -- status line
+
 local config = function()
 	local lualine = require("lualine")
 	local lazy_status = require("lazy.status") -- to configure ...

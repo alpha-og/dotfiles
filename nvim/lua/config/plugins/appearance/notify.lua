@@ -1,3 +1,5 @@
+-- plugin for showing notifications
+
 return {
 	"rcarriga/nvim-notify",
 	config = function()

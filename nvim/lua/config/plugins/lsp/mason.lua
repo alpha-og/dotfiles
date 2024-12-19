@@ -1,3 +1,5 @@
+-- plugin for installing and managing lsp servers and other tools
+
 local config = function()
 	local mason = require("mason")
 	local mason_lspconfig = require("mason-lspconfig")

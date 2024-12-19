@@ -1,3 +1,5 @@
+-- plugin for astro vim integration
+
 return {
 	"wuelnerdotexe/vim-astro",
 	config = function()

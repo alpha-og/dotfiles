@@ -1,3 +1,5 @@
+-- plugin configuration for handling neovim's native lsp
+
 local create_lsp_keymaps = function()
 	local telescope_builtin = require("telescope.builtin")
 	vim.api.nvim_create_autocmd("LspAttach", {
