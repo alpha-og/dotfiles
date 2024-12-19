@@ -78,11 +78,11 @@ local config = function()
 		},
 	})
 
-	-- Add cmp_nvim_lsp capabilities settings to lspconfig
+	-- Add blink.cmp capabilities settings to lspconfig
 	-- This should be executed before you configure any language server
-	local lspconfig_defaults = require("lspconfig").util.default_config
-	lspconfig_defaults.capabilities =
-		vim.tbl_deep_extend("force", lspconfig_defaults.capabilities, require("cmp_nvim_lsp").default_capabilities())
+	local lspconfig_defaults = lspconfig.util.default_config
+	local capabilities = require("blink.cmp").get_lsp_capabilities()
+	lspconfig_defaults.capabilities = vim.tbl_deep_extend("force", lspconfig_defaults.capabilities, capabilities)
 
 	-- This is where you enable features that only work
 	-- if there is a language server active in the file
@@ -103,23 +103,7 @@ local config = function()
 	})
 
 	-- lua
-	lspconfig.lua_ls.setup({
-		settings = { -- custom settings for lua
-			Lua = {
-				-- make the language server recognize "vim" global
-				diagnostics = {
-					globals = { "vim" },
-				},
-				workspace = {
-					-- make language server aware of runtime files
-					library = {
-						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-						[vim.fn.stdpath("config") .. "/lua"] = true,
-					},
-				},
-			},
-		},
-	})
+	lspconfig.lua_ls.setup({})
 
 	-- json
 	lspconfig.jsonls.setup({
@@ -284,11 +268,19 @@ return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
-		"hrsh7th/nvim-cmp",
-		"hrsh7th/cmp-buffer",
-		"hrsh7th/cmp-nvim-lsp",
 		"williamboman/mason.nvim",
 		"creativenull/efmls-configs-nvim",
+		{
+			"folke/lazydev.nvim",
+			ft = "lua", -- only load on lua files
+			opts = {
+				library = {
+					-- See the configuration section for more details
+					-- Load luvit types when the `vim.uv` word is found
+					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				},
+			},
+		},
 	},
 	config = config,
 }
