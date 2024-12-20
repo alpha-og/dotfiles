@@ -74,6 +74,7 @@ local config = function()
 	-- This will avoid an annoying layout shift in the screen
 	vim.opt.signcolumn = "yes"
 
+	-- add round borders to diagnostics float window
 	vim.diagnostic.config({
 		float = {
 			border = "rounded",
@@ -105,7 +106,23 @@ local config = function()
 	})
 
 	-- lua
-	lspconfig.lua_ls.setup({})
+	lspconfig.lua_ls.setup({
+		settings = { -- custom settings for lua
+			Lua = {
+				-- make the language server recognize "vim" global
+				diagnostics = {
+					globals = { "vim" },
+				},
+				workspace = {
+					-- make language server aware of runtime files
+					library = {
+						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+						[vim.fn.stdpath("config") .. "/lua"] = true,
+					},
+				},
+			},
+		},
+	})
 
 	-- json
 	lspconfig.jsonls.setup({
