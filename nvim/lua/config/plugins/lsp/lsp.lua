@@ -218,6 +218,7 @@ local config = function()
 	local black = require("efmls-configs.formatters.black")
 	local eslint_d = require("efmls-configs.linters.eslint_d")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
+	local prettier = require("efmls-configs.formatters.prettier")
 	-- local fixjson = require("efmls-configs.formatters.fixjson")
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt = require("efmls-configs.formatters.shfmt")
@@ -272,7 +273,7 @@ local config = function()
 				mdx = { alex, prettier_d },
 				html = { prettier_d },
 				css = { prettier_d },
-				astro = { prettier_d },
+				astro = { prettier },
 				rust = { { formatCommand = "rustfmt --edition 2021 --emit=stdout", formatStdin = true } },
 				java = {},
 				go = { { formatCommand = "gofmt", formatStdin = true } },

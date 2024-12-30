@@ -46,7 +46,7 @@ local config = function()
 			"flake8", -- python linter
 			"black", -- python formatter
 			"prettierd", -- prettier daemon formatter
-			-- "prettier", -- prettier formatter
+			"prettier", -- prettier formatter
 			"eslint_d", -- ts/js linter
 			"fixjson", -- json formatter
 			"shellcheck", -- shell linter
