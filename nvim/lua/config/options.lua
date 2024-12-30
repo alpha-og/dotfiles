@@ -58,3 +58,10 @@ opt.foldlevel = 99
 
 -- make command line go away
 opt.cmdheight = 0
+
+-- custom filetypes
+vim.filetype.add({
+	extension = {
+		ejs = "ejs",
+	},
+})
