@@ -32,5 +32,17 @@ return {
 
 		-- experimental signature help support
 		signature = { enabled = true },
+		completion = {
+			ghost_text = {
+				enabled = true,
+			},
+			menu = {
+				draw = {
+					columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+					treesitter = { "lsp" },
+				},
+				-- border = "rounded",
+			},
+		},
 	},
 }
