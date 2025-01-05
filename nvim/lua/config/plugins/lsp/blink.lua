@@ -34,7 +34,7 @@ return {
 		signature = { enabled = true },
 		completion = {
 			ghost_text = {
-				enabled = true,
+				enabled = false,
 			},
 			menu = {
 				draw = {
