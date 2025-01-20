@@ -65,3 +65,6 @@ vim.filetype.add({
 		ejs = "ejs",
 	},
 })
+
+-- ghost text color for blink.nvim
+vim.api.nvim_set_hl(0, "BlinkCmpGhostText", { fg = "#999a98" })
