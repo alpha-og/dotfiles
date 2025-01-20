@@ -46,6 +46,7 @@ return {
 			build = "make",
 		},
 		"polirritmico/telescope-lazy-plugins.nvim",
+		"nvim-neorg/neorg-telescope",
 	},
 	config = config,
 	keys = {
@@ -54,5 +55,19 @@ return {
 		{ "<leader>fg", require("telescope.builtin").live_grep, desc = "Grep search" },
 		{ "<leader>fb", require("telescope.builtin").buffers, desc = "Find buffers" },
 		{ "<leader>lp", "<CMD>Telescope lazy_plugins<CR>", desc = "Lazy plugins" },
+		-- neorg telescope mappings
+		{
+			"<localleader>fl",
+			"<CMD>Telescope neorg find_linkable<CR>",
+			desc = "Find linkable notes in current workspace",
+		},
+		{ "<localleader>fh", "<CMD>Telescope neorg search_headings<CR>", desc = "Find headings in current note" },
+		{ "<localleader>fb", "<CMD>Telescope neorg find_backlinks<CR>", desc = "Find backlinks to current note" },
+		{
+			"<localleader>ft",
+			"<CMD>Telescope neorg find_header_backlinks<CR>",
+			desc = "Find backlinks to current heading in current note",
+		},
+		{ "<localleader>fw", "<CMD>Telescope neorg switch_workspace<CR>", desc = "Switch neorg workspace" },
 	},
 }
