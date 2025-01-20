@@ -1,6 +1,6 @@
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
+if not vim.loop.fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
 	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 	if vim.v.shell_error ~= 0 then
@@ -19,7 +19,7 @@ vim.opt.rtp:prepend(lazypath)
 -- loading lazy.nvim so that mappings are correct.
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+vim.g.maplocalleader = ";"
 
 -- Setup lazy.nvim
 require("lazy").setup({
@@ -29,6 +29,7 @@ require("lazy").setup({
 		{ import = "config.plugins.utils" },
 		{ import = "config.plugins.lsp" },
 		{ import = "config.plugins.git" },
+		{ import = "config.plugins.note_taking" },
 	},
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
@@ -39,4 +40,9 @@ require("lazy").setup({
 	dev = {
 		path = vim.fn.expand("~/software_projects"),
 	},
+}, {
+	rocks = {
+		hererocks = true, -- recommended if you do not have global installation of Lua 5.1.
+	},
 })
+
