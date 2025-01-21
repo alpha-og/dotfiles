@@ -79,17 +79,20 @@ bindkey '^[[B' history-search-forward
 
 # ---- auto-start zellij ----
 # eval "$(zellij setup --generate-auto-start zsh)"
-export ZELLIJ_AUTO_START=true
-if [[ -z "$ZELLIJ" ]]; then
-  if [[ "$ZELLIJ_AUTO_START" == "true" && "$TERM_PROGRAM" == "WezTerm" ]]; then
-    if command -v zellij &> /dev/null; then
-      zellij -l welcome 
-    else
-      echo "Zellij not found. Please install it."
-    fi
-  fi
-fi
+# export ZELLIJ_AUTO_START=true
+# if [[ -z "$ZELLIJ" ]]; then
+#   if [[ "$ZELLIJ_AUTO_START" == "true" && "$TERM_PROGRAM" == "WezTerm" ]]; then
+#     if command -v zellij &> /dev/null; then
+#       zellij -l welcome 
+#     else
+#       echo "Zellij not found. Please install it."
+#     fi
+#   fi
+# fi
 
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export ANDROID_HOME="$HOME/Library/Android/sdk"
 export NDK_HOME="$ANDROID_HOME/ndk/27.1.12297006"
+
+# ---- zoxide ----
+eval "$(zoxide init zsh)"
