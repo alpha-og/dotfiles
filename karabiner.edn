@@ -49,6 +49,10 @@
         ;  :rules  [
         ;     [:##caps_lock        :left_control     nil         {:alone :escape}]
         ;   ]}
+        {
+         :des "open WezTerm"
+         :rules [[:!Oc "open -a wezterm"]]
+        }
 
         {:des "f-mode for delimeters and ! ? $"
          :rules [:f-mode 
