@@ -215,130 +215,78 @@ wezterm.on("augment-command-palette", function(window, pane)
 	}
 end)
 
----- modes ----
-table.insert(keys, {
-	key = "r",
-	mods = "LEADER",
-	action = action.ActivateKeyTable({
-		name = "resize_pane",
-		one_shot = false,
-	}),
-})
-table.insert(keys, {
-	key = "a",
-	mods = "LEADER",
-	action = action.ActivateKeyTable({
-		name = "activate_pane",
-		timeout_milliseconds = 1000,
-	}),
-})
 -- custom pain control
+local pane_resize = 5
 
-table.insert(key_tables, {
-	resize_pane = {
-		{ key = "LeftArrow", action = action.AdjustPaneSize({ "Left", 1 }) },
-		{ key = "h", action = action.AdjustPaneSize({ "Left", 1 }) },
+local pain_keys = {
+	-- Navigation
+	{ key = "h", mods = "LEADER", action = action.ActivatePaneDirection("Left") },
+	{ key = "h", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "LEADER", action = action.ActivatePaneDirection("Down") },
+	{ key = "j", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "LEADER", action = action.ActivatePaneDirection("Up") },
+	{ key = "k", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "LEADER", action = action.ActivatePaneDirection("Right") },
+	{ key = "l", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Right") },
 
-		{ key = "RightArrow", action = action.AdjustPaneSize({ "Right", 1 }) },
-		{ key = "l", action = action.AdjustPaneSize({ "Right", 1 }) },
-
-		{ key = "UpArrow", action = action.AdjustPaneSize({ "Up", 1 }) },
-		{ key = "k", action = action.AdjustPaneSize({ "Up", 1 }) },
-
-		{ key = "DownArrow", action = action.AdjustPaneSize({ "Down", 1 }) },
-		{ key = "j", action = action.AdjustPaneSize({ "Down", 1 }) },
-
-		-- Cancel the mode by pressing escape
-		{ key = "Escape", action = "PopKeyTable" },
+	-- Resizing Panes
+	{
+		key = "h",
+		mods = "LEADER|SHIFT",
+		action = action.Multiple({
+			action.AdjustPaneSize({ "Left", pane_resize }),
+			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
+		}),
+	},
+	{
+		key = "j",
+		mods = "LEADER|SHIFT",
+		action = action.Multiple({
+			action.AdjustPaneSize({ "Down", pane_resize }),
+			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
+		}),
+	},
+	{
+		key = "k",
+		mods = "LEADER|SHIFT",
+		action = action.Multiple({
+			action.AdjustPaneSize({ "Up", pane_resize }),
+			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
+		}),
+	},
+	{
+		key = "l",
+		mods = "LEADER|SHIFT",
+		action = action.Multiple({
+			action.AdjustPaneSize({ "Right", pane_resize }),
+			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
+		}),
 	},
 
-	-- Defines the keys that are active in our activate-pane mode.
-	-- 'activate_pane' here corresponds to the name="activate_pane" in
-	-- the key assignments above.
-	activate_pane = {
-		{ key = "LeftArrow", action = action.ActivatePaneDirection("Left") },
-		{ key = "h", action = action.ActivatePaneDirection("Left") },
+	-- Splitting Panes
+	{ key = "v", mods = "LEADER", action = action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "s", mods = "LEADER", action = action.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
-		{ key = "RightArrow", action = action.ActivatePaneDirection("Right") },
-		{ key = "l", action = action.ActivatePaneDirection("Right") },
+	-- Swapping Windows
+	{ key = "<", mods = "LEADER|SHIFT", action = action.MoveTabRelative(-1) },
+	{ key = ">", mods = "LEADER|SHIFT", action = action.MoveTabRelative(1) },
+}
 
-		{ key = "UpArrow", action = action.ActivatePaneDirection("Up") },
-		{ key = "k", action = action.ActivatePaneDirection("Up") },
+for _, key in ipairs(pain_keys) do
+	table.insert(keys, key)
+end
 
-		{ key = "DownArrow", action = action.ActivatePaneDirection("Down") },
-		{ key = "j", action = action.ActivatePaneDirection("Down") },
-	},
-})
+if not config.key_tables then
+	config.key_tables = {}
+end
 
--- local pain_keys = {
--- 	-- Navigation
--- 	{ key = "h", mods = "LEADER", action = action.ActivatePaneDirection("Left") },
--- 	{ key = "h", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Left") },
--- 	{ key = "j", mods = "LEADER", action = action.ActivatePaneDirection("Down") },
--- 	{ key = "j", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Down") },
--- 	{ key = "k", mods = "LEADER", action = action.ActivatePaneDirection("Up") },
--- 	{ key = "k", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Up") },
--- 	{ key = "l", mods = "LEADER", action = action.ActivatePaneDirection("Right") },
--- 	{ key = "l", mods = "LEADER|CTRL", action = action.ActivatePaneDirection("Right") },
---
--- 	-- Resizing Panes
--- 	{
--- 		key = "h",
--- 		mods = "LEADER|SHIFT",
--- 		action = action.Multiple({
--- 			action.AdjustPaneSize({ "Left", pane_resize }),
--- 			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
--- 		}),
--- 	},
--- 	{
--- 		key = "j",
--- 		mods = "LEADER|SHIFT",
--- 		action = action.Multiple({
--- 			action.AdjustPaneSize({ "Down", pane_resize }),
--- 			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
--- 		}),
--- 	},
--- 	{
--- 		key = "k",
--- 		mods = "LEADER|SHIFT",
--- 		action = action.Multiple({
--- 			action.AdjustPaneSize({ "Up", pane_resize }),
--- 			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
--- 		}),
--- 	},
--- 	{
--- 		key = "l",
--- 		mods = "LEADER|SHIFT",
--- 		action = action.Multiple({
--- 			action.AdjustPaneSize({ "Right", pane_resize }),
--- 			action.ActivateKeyTable({ name = "resize_pane", one_shot = false, until_unknown = true }),
--- 		}),
--- 	},
---
--- 	-- Splitting Panes
--- 	{ key = "|", mods = "LEADER|SHIFT", action = action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
--- 	{ key = "-", mods = "LEADER", action = action.SplitVertical({ domain = "CurrentPaneDomain" }) },
---
--- 	-- Swapping Windows
--- 	{ key = "<", mods = "LEADER|SHIFT", action = action.MoveTabRelative(-1) },
--- 	{ key = ">", mods = "LEADER|SHIFT", action = action.MoveTabRelative(1) },
--- }
---
--- for _, key in ipairs(pain_keys) do
--- 	table.insert(keys, key)
--- end
---
--- if not config.key_tables then
--- 	config.key_tables = {}
--- end
---
--- config.key_tables.resize_pane = {
--- 	{ key = "h", mods = "SHIFT", action = action.AdjustPaneSize({ "Left", pane_resize }) },
--- 	{ key = "j", mods = "SHIFT", action = action.AdjustPaneSize({ "Down", pane_resize }) },
--- 	{ key = "k", mods = "SHIFT", action = action.AdjustPaneSize({ "Up", pane_resize }) },
--- 	{ key = "l", mods = "SHIFT", action = action.AdjustPaneSize({ "Right", pane_resize }) },
--- 	{ key = "Escape", action = action.PopKeyTable },
--- }
+config.key_tables.resize_pane = {
+	{ key = "h", mods = "SHIFT", action = action.AdjustPaneSize({ "Left", pane_resize }) },
+	{ key = "j", mods = "SHIFT", action = action.AdjustPaneSize({ "Down", pane_resize }) },
+	{ key = "k", mods = "SHIFT", action = action.AdjustPaneSize({ "Up", pane_resize }) },
+	{ key = "l", mods = "SHIFT", action = action.AdjustPaneSize({ "Right", pane_resize }) },
+	{ key = "Escape", action = action.PopKeyTable },
+}
 
 -- general keymaps
 config.leader = { key = ";", mods = "CTRL", timeout_milliseconds = 1000 } -- leader key
