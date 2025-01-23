@@ -3,24 +3,6 @@ local wezterm = require("wezterm")
 local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
 M.keys = {
-	-- ...
-	{
-		key = "w",
-		mods = "LEADER",
-		action = wezterm.action_callback(function(win, pane)
-			resurrect.save_state(resurrect.workspace_state.get_workspace_state())
-		end),
-	},
-	{
-		key = "W",
-		mods = "LEADER",
-		action = resurrect.window_state.save_window_action(),
-	},
-	{
-		key = "T",
-		mods = "LEADER",
-		action = resurrect.tab_state.save_tab_action(),
-	},
 	{
 		key = "s",
 		mods = "LEADER",
