@@ -151,7 +151,7 @@ M.blurred_image = {
 }
 
 M.image = {
-	landscape = {
+	clearday = {
 		{
 			source = {
 				File = "/Users/athulanoop/dotfiles/wezterm/assets/clearday.jpg",
