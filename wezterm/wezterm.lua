@@ -1,15 +1,12 @@
 local wezterm = require("wezterm")
 local background = require("background")
+local keymaps = require("keymaps")
+require("plugins.plugins")
 
 local config = wezterm.config_builder()
-local keys = config.keys or {}
 
--- disable the default keybinding for alt-enter
-table.insert(keys, {
-	key = "Enter",
-	mods = "ALT",
-	action = wezterm.action.DisableDefaultAssignment,
-})
+config.leader = keymaps.leader
+config.keys = keymaps.keys
 
 -- font
 config.font = wezterm.font("Hack Nerd Font")
@@ -28,11 +25,9 @@ config.window_padding = {
 config.use_resize_increments = true
 config.use_fancy_tab_bar = false
 
-config.keys = keys
-
 -- performance
-config.max_fps = 120 -- set max fps to 120
-config.prefer_egl = true -- prefer egl
+-- config.max_fps = 120 -- set max fps to 120
+-- config.prefer_egl = true -- prefer egl
 
 -- return the configuration
 return config
