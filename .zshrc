@@ -96,3 +96,6 @@ export NDK_HOME="$ANDROID_HOME/ndk/27.1.12297006"
 
 # ---- zoxide ----
 eval "$(zoxide init zsh)"
+
+# ---- add directory for custom commands/ scripts ----
+export PATH="$PATH:$HOME/bin"
