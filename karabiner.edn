@@ -51,7 +51,7 @@
         ;   ]}
         {
          :des "open WezTerm"
-         :rules [[:!Oc "open -a wezterm"]]
+         :rules [[:!Oc "open -a WezTerm"]]
         }
 
         {:des "f-mode for delimeters and ! ? $"
