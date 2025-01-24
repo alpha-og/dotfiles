@@ -9,11 +9,16 @@ M.leader = {
 	mods = "CTRL",
 }
 
--- disable the default keybinding for alt-enter
 local keys = {
+	-- disable the specific default keybindings
 	{
 		key = "Enter",
 		mods = "ALT",
+		action = wezterm.action.DisableDefaultAssignment,
+	},
+	{
+		key = "Tab",
+		mods = "CTRL",
 		action = wezterm.action.DisableDefaultAssignment,
 	},
 	-- Prompt for a name to use for a new workspace and switch to it.
@@ -43,19 +48,6 @@ local keys = {
 	},
 	-- Create a new workspace with a random name and switch to it
 	{ key = "n", mods = "LEADER", action = act.SwitchToWorkspace },
-	-- Switch to a monitoring workspace, which will have `btop` launched into it
-	{
-		key = "p",
-		mods = "LEADER",
-		action = act.SwitchToWorkspace({
-			name = "monitoring",
-			spawn = {
-				args = {
-					"/opt/homebrew/bin/btop",
-				},
-			},
-		}),
-	},
 
 	-- Show the launcher in fuzzy selection mode and have it list all workspaces
 	-- and allow activating one.
