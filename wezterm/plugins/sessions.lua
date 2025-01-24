@@ -12,6 +12,12 @@ M.keys = {
 		mods = "CTRL",
 		action = workspace_switcher.switch_to_prev_workspace(),
 	},
+
+	-- {
+	-- 	key = "R",
+	-- 	mods = "LEADER",
+	-- 	action = wezterm.mux.rename_workspace(wezterm.mux.get_active_workspace(), "something different"),
+	-- },
 }
 
 return M

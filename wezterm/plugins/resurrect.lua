@@ -2,6 +2,9 @@ local M = {}
 local wezterm = require("wezterm")
 local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
+---@param opts? { interval_seconds: integer?, save_workspaces: boolean?, save_windows: boolean?, save_tabs: boolean? }
+resurrect.periodic_save({ interval_seconds = 60, save_workspaces = true, save_windows = true, save_tabs = true })
+
 M.keys = {
 	{
 		key = "s",
