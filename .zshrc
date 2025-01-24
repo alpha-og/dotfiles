@@ -48,13 +48,6 @@ export BAT_THEME="Catppuccin Mocha"
 # ---- direnv ----
 eval "$(direnv hook zsh)"
 
-# ---- pnpm ----
-export PNPM_HOME="/Users/athulanoop/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
 # ---- zsh-autosuggestions ----
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
@@ -96,6 +89,3 @@ export NDK_HOME="$ANDROID_HOME/ndk/27.1.12297006"
 
 # ---- zoxide ----
 eval "$(zoxide init zsh)"
-
-# ---- add directory for custom commands/ scripts ----
-export PATH="$PATH:$HOME/bin"
