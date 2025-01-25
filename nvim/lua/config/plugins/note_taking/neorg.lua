@@ -23,6 +23,8 @@ return {
 						author = "Athul Anoop",
 					},
 				},
+				["core.integrations.image"] = {},
+				["core.latex.renderer"] = {},
 			},
 		})
 
