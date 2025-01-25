@@ -36,16 +36,6 @@ M.catppuccin.simple = {
 M.catppuccin.blurred_image.flower = {
 	{
 		source = {
-			Color = colors.text,
-		},
-		width = "100%",
-		height = "100%",
-		hsb = {
-			brightness = 1,
-		},
-	},
-	{
-		source = {
 			Gradient = {
 				colors = {
 					colors.mauve,
@@ -59,7 +49,7 @@ M.catppuccin.blurred_image.flower = {
 		hsb = {
 			brightness = 0.025,
 		},
-		opacity = 0.9,
+		opacity = 0.93,
 	},
 	{
 		source = {
@@ -78,17 +68,6 @@ M.catppuccin.image.clearday = {
 			File = "/Users/athulanoop/dotfiles/wezterm/assets/clearday.jpg",
 		},
 	},
-	{
-		source = {
-			Color = colors.text,
-		},
-		width = "100%",
-		height = "100%",
-		hsb = {
-			brightness = 1,
-		},
-		opacity = 0.4,
-	},
 
 	{
 		source = {
@@ -103,9 +82,9 @@ M.catppuccin.image.clearday = {
 		width = "100%",
 		height = "100%",
 		hsb = {
-			brightness = 0.02,
+			brightness = 0.01,
 		},
-		opacity = 0.9,
+		opacity = 0.94,
 	},
 }
 

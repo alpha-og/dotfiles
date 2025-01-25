@@ -7,6 +7,7 @@ local function basename(s)
 	return string.gsub(s, "(.*[/\\])(.*)", "%2")
 end
 
+-- config.disable_default_key_bindings = true
 config.leader = keymaps.leader
 config.keys = {}
 
@@ -19,7 +20,6 @@ config.color_scheme = "Catppuccin Mocha" -- set color scheme
 config.hide_tab_bar_if_only_one_tab = true -- hide tab bar if there is only one tab
 -- config.window_background_image = constants.bg -- set background image
 config.background = background.catppuccin.image.clearday -- set background image
-
 config.window_decorations = "RESIZE" -- disable title bar
 config.window_padding = {
 	bottom = 0,
@@ -30,13 +30,29 @@ config.use_fancy_tab_bar = false
 -- performance
 -- config.max_fps = 120 -- set max fps to 120
 -- config.prefer_egl = true -- prefer egl
-
 keymaps.setup(wezterm, config)
 
 local colors = require("colors")
 
+-- local modal = wezterm.plugin.require("https://github.com/MLFlexer/modal.wezterm")
+-- modal.apply_to_config(config)
+--
+-- wezterm.on("modal.enter", function(name, window, pane)
+-- 	modal.set_right_status(window, name)
+-- 	modal.set_window_title(pane, name)
+-- end)
+--
+-- wezterm.on("modal.exit", function(name, window, pane)
+-- 	local title = basename(window:active_workspace())
+-- 	window:set_right_status(wezterm.format({
+-- 		{ Attribute = { Intensity = "Bold" } },
+-- 		{ Foreground = { Color = colors.mauve } },
+-- 		{ Text = title .. "  " },
+-- 	}))
+-- 	modal.reset_window_title(pane)
+-- end)
+
 local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
----@param opts? { interval_seconds: integer?, save_workspaces: boolean?, save_windows: boolean?, save_tabs: boolean? }
 resurrect.periodic_save({ interval_seconds = 60, save_workspaces = true, save_windows = true, save_tabs = true })
 
 wezterm.on("gui-startup", resurrect.resurrect_on_gui_startup)
@@ -46,17 +62,17 @@ workspace_switcher.workspace_formatter = function(label)
 	return wezterm.format({
 		{ Attribute = { Italic = true } },
 		{ Foreground = { Color = colors.mauve } },
-		{ Background = { Color = colors.surface0 } },
+		{ Background = { Color = colors.base } },
 		{ Text = "󱂬 : " .. label },
 	})
 end
 
 wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, path, label)
-	window:gui_window():set_right_status(wezterm.format({
-		{ Attribute = { Intensity = "Bold" } },
-		{ Foreground = { Color = colors.mauve } },
-		{ Text = basename(path) .. "  " },
-	}))
+	-- window:gui_window():set_right_status(wezterm.format({
+	-- 	{ Attribute = { Intensity = "Bold" } },
+	-- 	{ Foreground = { Color = colors.mauve } },
+	-- 	{ Text = basename(path) .. "  " },
+	-- }))
 	local workspace_state = resurrect.workspace_state
 
 	workspace_state.restore_workspace(resurrect.load_state(label, "workspace"), {
@@ -90,43 +106,31 @@ wezterm.on("smart_workspace_switcher.workspace_switcher.canceled", function(wind
 	wezterm.log_info(window)
 end)
 
--- local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
--- smart_splits.apply_to_config(config, {
--- 	direction_keys = { "h", "j", "k", "l" },
--- 	modifiers = {
--- 		move = "CTRL",
--- 		resize = "ALT",
--- 	},
--- })
+local smart_splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
+-- you can put the rest of your Wezterm config here
+smart_splits.apply_to_config(config, {
+	-- the default config is here, if you'd like to use the default keys,
+	-- you can omit this configuration table parameter and just use
+	-- smart_splits.apply_to_config(config)
 
-local domains = wezterm.plugin.require("https://github.com/DavidRR-F/quick_domains.wezterm")
-domains.apply_to_config(config, {
-	keys = {
-		attach = {
-			key = "t",
-			mods = "ALT|SHIFT",
-			tbl = "",
-		},
-		vsplit = {
-			key = "_",
-			mods = "CTRL|ALT",
-			tbl = "",
-		},
-		hsplit = {
-			key = "-",
-			mods = "CTRL|ALT",
-			tbl = "",
-		},
+	-- directional keys to use in order of: left, down, up, right
+	direction_keys = { "h", "j", "k", "l" },
+	-- modifier keys to combine with direction_keys
+	modifiers = {
+		move = "CTRL", -- modifier to use for pane movement, e.g. CTRL+h to move left
+		resize = "SHIFT|CTRL", -- modifier to use for pane resize, e.g. META+h to resize to the left
 	},
-	auto = {
-		ssh_ignore = true,
-		exec_ignore = {
-			ssh = true,
-			docker = true,
-			kubernetes = true,
-		},
-	},
+	-- log level to use: info, warn, error
+	log_level = "info",
 })
 
+wezterm.on("update-status", function(window, pane)
+	local workspace = window:active_workspace()
+	window:set_right_status(wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = colors.mauve } },
+		{ Text = workspace .. "  " },
+	}))
+end)
 -- return the configuration
 return config
