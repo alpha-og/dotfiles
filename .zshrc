@@ -1,3 +1,5 @@
+# ---- custom keybindings ----
+bindkey '^]' clear-screen 
 # -- fzf --
 eval "$(fzf --zsh)"
 source ~/.config/fzf-git.sh/fzf-git.sh

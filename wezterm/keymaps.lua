@@ -11,7 +11,7 @@ M.setup = function(wezterm, config)
 	local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 	local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 	local keys = {
-		-- disable the specific default keybindings
+		-- disable specific default keybindings
 		{
 			key = "Enter",
 			mods = "ALT",
@@ -21,6 +21,33 @@ M.setup = function(wezterm, config)
 			key = "Tab",
 			mods = "CTRL",
 			action = wezterm.action.DisableDefaultAssignment,
+		},
+		-- remap debug overlay keybinding
+		{
+			key = "d",
+			mods = "CTRL|SHIFT",
+			action = wezterm.action.ShowDebugOverlay,
+		},
+		-- split panes
+		{
+			key = "s",
+			mods = "LEADER",
+			action = wezterm.action.SplitPane({
+				direction = "Down",
+				-- size = { Percent = 30 },
+			}),
+		},
+		{
+			key = "v",
+			mods = "LEADER",
+			action = wezterm.action.SplitPane({
+				direction = "Right",
+			}),
+		},
+		{
+			key = "z",
+			mods = "LEADER",
+			action = wezterm.action.TogglePaneZoomState,
 		},
 		-- Prompt for a name to use for a new workspace and switch to it.
 		{
@@ -78,7 +105,7 @@ M.setup = function(wezterm, config)
 		-- },
 
 		{
-			key = "s",
+			key = "S",
 			mods = "LEADER",
 			action = wezterm.action_callback(function(win, pane)
 				resurrect.save_state(resurrect.workspace_state.get_workspace_state())
@@ -86,7 +113,7 @@ M.setup = function(wezterm, config)
 			end),
 		},
 		{
-			key = "r",
+			key = "R",
 			mods = "LEADER",
 			action = wezterm.action_callback(function(win, pane)
 				resurrect.fuzzy_load(win, pane, function(id, label)
@@ -112,7 +139,7 @@ M.setup = function(wezterm, config)
 			end),
 		},
 		{
-			key = "d",
+			key = "D",
 			mods = "LEADER",
 			action = wezterm.action_callback(function(win, pane)
 				resurrect.fuzzy_load(win, pane, function(id)
