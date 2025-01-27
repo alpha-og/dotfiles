@@ -29,7 +29,7 @@ require("lazy").setup({
 		{ import = "config.plugins.utils" },
 		{ import = "config.plugins.lsp" },
 		{ import = "config.plugins.git" },
-		{ import = "config.plugins.note_taking" },
+		{ import = "config.plugins.notes" },
 	},
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
@@ -45,4 +45,3 @@ require("lazy").setup({
 		hererocks = true, -- recommended if you do not have global installation of Lua 5.1.
 	},
 })
-
