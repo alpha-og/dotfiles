@@ -31,6 +31,27 @@ local config = function()
 	telescope.load_extension("fzf")
 	telescope.load_extension("noice")
 	telescope.load_extension("lazy_plugins")
+
+	-- set keymaps
+	local builtin = require("telescope.builtin")
+	local opts = { noremap = true, silent = true }
+	local keymap = vim.keymap
+	opts.desc = "help tags"
+	keymap.set("n", "<leader>fh", builtin.help_tags, opts)
+
+	opts.desc = "find files"
+	keymap.set("n", "<leader>ff", builtin.find_files, opts)
+
+	opts.desc = "live grep"
+	keymap.set("n", "<leader>fg", builtin.live_grep, opts)
+
+	opts.desc = "buffers"
+	keymap.set("n", "<leader>fb", builtin.buffers, opts)
+
+	opts.desc = "lazy plugins"
+	keymap.set("n", "<leader>lp", "<CMD>Telescope lazy_plugins<CR>", opts)
+
+	-- neorg telescope mappings
 end
 
 return {
@@ -49,25 +70,11 @@ return {
 		"nvim-neorg/neorg-telescope",
 	},
 	config = config,
-	keys = {
-		{ "<leader>fh", require("telescope.builtin").help_tags, desc = "Help tags" },
-		{ "<leader>ff", require("telescope.builtin").find_files, desc = "Find files" },
-		{ "<leader>fg", require("telescope.builtin").live_grep, desc = "Grep search" },
-		{ "<leader>fb", require("telescope.builtin").buffers, desc = "Find buffers" },
-		{ "<leader>lp", "<CMD>Telescope lazy_plugins<CR>", desc = "Lazy plugins" },
-		-- neorg telescope mappings
-		{
-			"<localleader>fl",
-			"<CMD>Telescope neorg find_linkable<CR>",
-			desc = "Find linkable notes in current workspace",
-		},
-		{ "<localleader>fh", "<CMD>Telescope neorg search_headings<CR>", desc = "Find headings in current note" },
-		{ "<localleader>fb", "<CMD>Telescope neorg find_backlinks<CR>", desc = "Find backlinks to current note" },
-		{
-			"<localleader>ft",
-			"<CMD>Telescope neorg find_header_backlinks<CR>",
-			desc = "Find backlinks to current heading in current note",
-		},
-		{ "<localleader>fw", "<CMD>Telescope neorg switch_workspace<CR>", desc = "Switch neorg workspace" },
-	},
+	-- keys = {
+	-- 	{ "<leader>fh", "Telescope help_tags", desc = "Help tags" },
+	-- 	{ "<leader>ff", "Telescope find_files", desc = "Find files" },
+	-- 	{ "<leader>fg", "Telescope live_grep", desc = "Live grep" },
+	-- 	{ "<leader>fb", "Telescope buffers", desc = "Buffers" },
+	-- 	{ "<leader>lp", "<CMD>Telescope lazy_plugins<CR>", desc = "Lazy plugins" },
+	-- }
 }
