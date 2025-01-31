@@ -10,6 +10,7 @@ eval "$(mise activate zsh)"
 
 # ---- pnpm path ----
 if [[ "$(uname)" == "Darwin" ]]
+then
     export PNPM_HOME="$HOME/Library/pnpm"
     case ":$PATH:" in
       *":$PNPM_HOME:"*) ;;
