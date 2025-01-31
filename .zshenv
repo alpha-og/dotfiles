@@ -1,5 +1,9 @@
 # ---- homebrew path----
-eval "$(/opt/homebrew/bin/brew shellenv)"
+
+if [[ -d "/opt/homebrew/bin" ]] && [[ "$(uname)" == "Darwin" ]]
+then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 # ---- mise path ----
 eval "$(mise activate zsh)"
