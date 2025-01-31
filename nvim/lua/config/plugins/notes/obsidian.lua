@@ -15,8 +15,6 @@ return {
 	dependencies = {
 		-- Required.
 		"nvim-lua/plenary.nvim",
-
-		-- see below for full list of optional dependencies 👇
 	},
 	opts = {
 		workspaces = {
@@ -25,7 +23,13 @@ return {
 				path = "~/notes",
 			},
 		},
+		ui = {
+			enable = false,
+		},
 
-		-- see below for full list of options 👇
+		completion = {
+
+			min_chars = 0,
+		},
 	},
 }
