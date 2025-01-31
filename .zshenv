@@ -9,11 +9,13 @@ fi
 eval "$(mise activate zsh)"
 
 # ---- pnpm path ----
-export PNPM_HOME="/Users/athulanoop/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+if [[ "$(uname)" == "Darwin" ]]
+    export PNPM_HOME="$HOME/Library/pnpm"
+    case ":$PATH:" in
+      *":$PNPM_HOME:"*) ;;
+      *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
+fi
 
 # ---- add directory for custom commands/ scripts ----
 export PATH="$PATH:$HOME/bin"
