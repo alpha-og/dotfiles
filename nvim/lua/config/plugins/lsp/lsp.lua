@@ -224,7 +224,7 @@ local config = function()
 	local shfmt = require("efmls-configs.formatters.shfmt")
 	-- local cpplint = require("efmls-configs.linters.cpplint")
 	local clangformat = require("efmls-configs.formatters.clang_format")
-	local alex = require("efmls-configs.linters.alex")
+	-- local alex = require("efmls-configs.linters.alex")
 	-- configure efm server
 	lspconfig.efm.setup({
 		filetypes = {
@@ -269,8 +269,8 @@ local config = function()
 				javascriptreact = { eslint_d, prettier_d },
 				typescriptreact = { eslint_d, prettier_d },
 				svelte = { eslint_d, prettier_d },
-				markdown = { alex, prettier_d },
-				mdx = { alex, prettier_d },
+				markdown = { prettier_d },
+				mdx = { prettier_d },
 				html = { prettier_d },
 				css = { prettier_d },
 				astro = { prettier },
