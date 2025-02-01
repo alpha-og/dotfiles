@@ -2,7 +2,7 @@
 bindkey '^]' clear-screen 
 # -- fzf --
 eval "$(fzf --zsh)"
-source "~/.config/fzf-git.sh/fzf-git.sh"
+source "$HOME/.config/fzf-git.sh/fzf-git.sh"
 # -- Use fd instead of fzf --
 
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
@@ -50,14 +50,15 @@ export BAT_THEME="Catppuccin Mocha"
 # ---- direnv ----
 eval "$(direnv hook zsh)"
 
-if [[ command -v brew &> /dev/null 2>&1 ]]; then
+if command -v brew &> /dev/null 2>&1
+then
 # ---- zsh-autosuggestions ----
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # ---- zsh-syntax-highlighting ----
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 else
-    source "/usr/local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-    source "/usr/local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    source "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    source "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # ---- starship ----
