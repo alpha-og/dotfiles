@@ -1,8 +1,7 @@
 -- plugin for using and navigating terminals
 
 return {
-	"terminotaur",
-	dev = true,
+	"alpha-og/terminotaur",
 	config = function()
 		vim.keymap.set("n", "<leader>tt", "<cmd>ToggleFloatingTerminal<cr>", { noremap = true, silent = true })
 		vim.keymap.set("n", "<leader>tv", "<cmd>OpenNewVerticalTerminal<cr>", { noremap = true, silent = true })
