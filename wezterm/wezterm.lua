@@ -14,12 +14,14 @@ config.keys = {}
 -- font
 config.font = wezterm.font("Hack Nerd Font")
 config.font_size = 15
+config.enable_wayland = false
 
 -- appearance
 config.color_scheme = "Catppuccin Mocha" -- set color scheme
 config.hide_tab_bar_if_only_one_tab = true -- hide tab bar if there is only one tab
 -- config.window_background_image = constants.bg -- set background image
 -- config.background = background.catppuccin.image.clearday -- set background image
+-- config.window_background_opacity = 0.95
 config.window_decorations = "RESIZE" -- disable title bar
 config.window_padding = {
 	bottom = 0,
