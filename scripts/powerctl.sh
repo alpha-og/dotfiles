@@ -32,10 +32,10 @@ function close_apps() {
 
     client_count=$(hyprctl clients | grep "class:" | wc -l)
     if [ "$client_count" -eq "0" ]; then
-        notify-send "power controls" "Applications closed."
+        notify-send "power controls" "Applications closed successfully."
         return
     else
-        notify-send "power controls" "Some apps didn't close. Not shutting down."
+        notify-send "power controls" "Some apps didn't close. Shutdown aborted."
         exit 1
     fi
 }
