@@ -1,0 +1,9 @@
+[Unit] Description=Start hyprland After=sysinit.target After=initrd-switch-root.service
+
+Wants=systemd-udev-trigger.service After=systemd-udev-trigger.service Wants=seatd.service After=seatd.service Wants=systemd-logind.service After=systemd-logind.service
+
+ConditionPathExists=/home/athulanoop OnFailure=emergency.target
+
+[Service] Type=simple ExecStartPre=+/usr/sbin/rm -f /run/nologin ExecStart=-/usr/sbin/agetty -o '-p -f -- \u' --noclear --autologin athulanoop %I $TERM StandardOutput=null StandardError=journal
+
+[Install] WantedBy=graphical.target WantedBy=initrd-switch-root.service 
