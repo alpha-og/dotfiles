@@ -54,6 +54,11 @@
          :rules [[:!Oc "open -a WezTerm"]]
         }
 
+        {
+         :des "Switch monitor input source"
+          :rules [[:!Od "/opt/homebrew/bin/betterdisplaycli set --ddcAlt=145 --vcp=inputSelectAlt"]]
+        }
+
         {:des "f-mode for delimeters and ! ? $"
          :rules [:f-mode 
                  ;; u i j k m comma -> !Sopen_bracket !Sclose_bracket !S9 !S0 open_bracket close_bracket
