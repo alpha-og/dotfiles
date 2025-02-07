@@ -72,7 +72,7 @@ reboot | restart)
 	close_apps
 	systemctl reboot
 	;;
-
+# suspend & hibernate are a bit jank as it stands, but works
 suspend)
 	hyprlock
 	systemctl suspend
@@ -100,7 +100,8 @@ close)
 	close_apps
 	;;
 *)
-	echo $"Usage: $0 {shutdown|reboot|suspend|hibernate|logout|lock|close}"
+	echo "Usage: $0 {shutdown|reboot|suspend|hibernate|logout|lock|close}"
+	echo "Caution: Suspend and Hibernate are a bit jank as it stands, but are somewhat functional."
 	exit 1
 	;;
 esac
