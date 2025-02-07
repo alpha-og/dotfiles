@@ -1,80 +1,106 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 #
-# Author: Athul Anoop 
+# Author: Athul Anoop
 #
-# This script is a customized/ adapted version of the script found here https://github.com/SuchithSridhar/nixos-dotfiles/blob/60b591a3f0d93c65ef9d25eb36e3a4f121bb3fb2/scripts/power-controls, which is used to manage power based controls on Hyprland
-# These are operations like shutdown, lock, and logout.
-# 
-# Before performing some of these operations we handle the closing of apps.
-# If there are apps that can't be closed without losing data, then the power operation
-# is cancelled and a notification about the cause of the cancellation is sent.
+# This script is a customized/ adapted version of the script found here
+# https://github.com/SuchithSridhar/nixos-dotfiles/blob/60b591a3f0d93c65ef9d25eb36e3a4f121bb3fb2/scripts/power-controls,
+# which is used to manage power based controls on Hyprland
+
+LOG_FILE=/tmp/powerctl/powerctl.log
+WAIT_TIME=3 # time to wait before final command for a given operation is executed in seconds
+
+function get_client_count() {
+	hyprctl clients | grep -c "Window"
+}
+
+function powerctl_log() {
+	if [[ -f $LOG_FILE ]]; then
+		echo "$(date +"%Y-%m-%d %H:%M:%S"): $1" >$LOG_FILE
+	else
+		echo "$(date +"%Y-%m-%d %H:%M:%S"): $1" >>$LOG_FILE
+	fi
+}
 
 function close_apps() {
-    # display notification about closing apps
-    client_count=$(hyprctl clients | grep "Window" | wc -l)
-    if [[ "$client_count" -gt 1 ]]
-    then
-        notify-send "powerctl" "Closing Applications..."
-    fi
-    sleep 3
+	# display notification about closing apps
+	if [[ "$(get_client_count)" -gt 1 ]]; then
+		powerctl_log "Closing all apps..."
+	fi
 
-    # close all client windows
-    # required for graceful exit since many apps aren't good SIGNAL citizens
-    HYPRCMDS=$(hyprctl -j clients | jq -j '.[] | "dispatch closewindow address:\(.address); "')
-    if [[ -f /tmp/hypr/hyprexitwithgrace.log ]]
-    then
-        hyprctl --batch "$HYPRCMDS" >> /tmp/hypr/hyprexitwithgrace.log 2>&1
-    else
-        hyprctl --batch "$HYPRCMDS" > /tmp/hypr/hyprexitwithgrace.log 2>&1
-    fi
+	# synthesize commands to close all hyprland windows using hyprctl
+	hyprcmds=$(hyprctl -j clients | jq -j '.[] | "dispatch closewindow address:\(.address); "')
 
-    sleep 2
+	# dispatch batch commands using hyprctl
+	if [[ -f $LOG_FILE ]]; then
+		powerctl_log "$(hyprctl --batch "$hyprcmds")"
+	else
+		powerctl_log "$(hyprctl --batch "$hyprcmds")"
+	fi
 
-    client_count=$(hyprctl clients | grep "class:" | wc -l)
-    if [ "$client_count" -eq "0" ]; then
-        notify-send "power controls" "Applications closed successfully."
-        return
-    else
-        notify-send "power controls" "Some apps didn't close. Shutdown aborted."
-        exit 1
-    fi
+	sleep "$WAIT_TIME"
+
+	if [[ "$(get_client_count)" -eq "0" ]]; then
+		powerctl_log "All apps closed successfully."
+		return
+	else
+		powerctl_log "Some apps didn't close. Sending SIGTERM to all open apps."
+		pids=($(hyprctl clients | grep pid | cut -d ':' -f 2))
+		for pid in "${pids[@]}"; do
+			powerctl_log "Sending SIGTERM to $pid"
+			powerctl_log "$(kill "$pid")"
+		done
+
+		sleep "$WAIT_TIME"
+
+		if [ "$(get_client_count)" -eq "0" ]; then
+			powerctl_log "All apps closed successfully."
+		else
+			powerctl_log "Some apps couldnt be closed. Please close them manually."
+			exit 1
+		fi
+	fi
 }
 
 case "$1" in
-        shutdown)
-                close_apps
-                systemctl poweroff
-             ;;
-        reboot | restart)
-                close_apps
-                systemctl reboot
-            ;;
+poweroff | shutdown)
+	notify-send "powerctl" "Shutting down..."
+	close_apps
+	systemctl poweroff
+	;;
+reboot | restart)
+	notify-send "powerctl" "Rebooting..."
+	close_apps
+	systemctl reboot
+	;;
 
-        suspend)
-            hyprlock
-            sleep 3
-            systemctl suspend
-            ;;
+suspend)
+	hyprlock
+	systemctl suspend
+	;;
 
-        hibernate)
-            hyprlock
-            systemctl hibernate
-            ;;
+hibernate)
+	hyprlock
+	systemctl hibernate
+	;;
 
-        logout)
-            close_apps
-            hyprctl dispatch exit
-            ;;
+logout)
+	notify-send "powerctl" "Logging out..."
+	close_apps
+	hyprctl dispatch exit # exit hyprland
+	;;
 
-        lock)
-            hyprlock
-            ;;
+lock)
+	notify-send "powerctl" "Locking screen..."
+	sleep 1
+	hyprlock
+	;;
 
-        close)
-            close_apps
-            ;;
-        *)
-            echo $"Usage: $0 {shutdown|reboot|suspend|hibernate|logout|lock|close}"
-            exit 1
+close)
+	notify-send "powerctl" "Closing all apps..."
+	close_apps
+	;;
+*)
+	echo $"Usage: $0 {shutdown|reboot|suspend|hibernate|logout|lock|close}"
+	exit 1
+	;;
 esac
-
