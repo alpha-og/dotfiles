@@ -1,0 +1,108 @@
+* {
+  font-family: "SF Pro Rounded", "Font Awesome 6 Free";
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  min-height: 0;
+  color: @mocha-text;
+}
+
+@import "theme.css";
+
+/* main background */
+window#waybar {
+  background-color: transparent;
+}
+
+/* === Tooltip === */
+
+tooltip {
+  background: @mocha-base;
+  border: solid;
+  border-width: 1.5px;
+  border-radius: 8px;
+  border-color: @mocha-rosewater;
+}
+tooltip label {
+  font-weight: normal;
+  margin: -1.5px 3px;
+}
+
+#workspaces {
+  background: @mocha-surface0;
+  border-radius: 8px;
+  padding: 0 6px;
+  margin: 3px 4px;
+}
+
+#workspaces button {
+  border-radius: 8px;
+  box-shadow: none;
+  margin: 2px 0;
+  padding: 0 4px;
+  transition: none;
+}
+
+#workspaces button:hover {
+  background: @mocha-mauve;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+#workspaces button:hover label {
+  color: @mocha-crust;
+}
+
+#workspaces button.active {
+  margin: 2px;
+  padding: 0 6px;
+}
+
+#workspaces button.active label {
+  color: @mocha-mauve;
+  font-weight: 800;
+}
+
+#workspaces button.active:hover label {
+  color: @mocha-crust;
+}
+
+#window,
+#clock,
+#custom-wifi,
+#bluetooth {
+  margin: 3px 4px;
+}
+
+#window {
+  padding: 2px 16px;
+  background: @mocha-surface0;
+  border-radius: 8px;
+}
+#clock {
+  padding: 0 6px;
+}
+
+#custom-wifi {
+  padding-left: 7.5px;
+  padding-right: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+#custom-wifi:hover {
+  color: @hover-fg;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+#bluetooth {
+  padding-right: 5px;
+  background: @tray;
+}
+#bluetooth:hover {
+  color: @hover-fg;
+  text-shadow: none;
+  box-shadow: none;
+}
