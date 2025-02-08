@@ -13,7 +13,16 @@
 
 /* main background */
 window#waybar {
-  background-color: transparent;
+  /* From https://css.glass */
+  background: rgba(163, 134, 199, 0.19);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(163, 134, 199, 0.17);
+}
+/* === Drop Shadow === */
+
+window#waybar > box {
+  padding: 2px;
+  margin: 0 0 2px 0;
 }
 
 /* === Tooltip === */

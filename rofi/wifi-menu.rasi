@@ -2,6 +2,11 @@
 
 configuration {
   font:                     "SF Pro Rounded 12";
+  timeout {
+      action: "kb-cancel";
+      delay:  5;
+  }
+
 }
 
 @theme "~/.config/rofi/theme.rasi"

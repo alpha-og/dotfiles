@@ -13,6 +13,11 @@ configuration {
     show-icons:                 true;
     display-drun:               "";
 	drun-display-format:        "{name}";
+    timeout {
+      action: "kb-cancel";
+      delay:  5;
+    }
+
 }
 
 /*****----- Global Properties -----*****/
