@@ -29,7 +29,7 @@ window {
     location:                    center;
     anchor:                      center;
     fullscreen:                  false;
-    width:                       400px;
+    width:                       600px;
     x-offset:                    0px;
     y-offset:                    0px;
 
@@ -38,8 +38,8 @@ window {
     padding:                     0px;
     border:                      1px solid;
     border-radius:               12px;
-    border-color:                @selected;
-    background-color:            @background;
+    border-color:                @surface0;
+    background-color:            @base;
     cursor:                      "default";
 }
 
@@ -51,8 +51,8 @@ mainbox {
     padding:                     0px;
     border:                      0px solid;
     border-radius:               0px 0px 0px 0px;
-    border-color:                @selected;
-    background-color:            transparent;
+    border-color:                @surface2;
+    background-color:            @base;
     children:                    [ "inputbar", "listview" ];
 }
 
@@ -64,9 +64,9 @@ inputbar {
     padding:                     15px;
     border:                      0px solid;
     border-radius:               0px;
-    border-color:                @selected;
-    background-color:            @selected;
-    text-color:                  @background;
+    border-color:                @surface2;
+    background-color:            @surface0;
+    text-color:                  @text;
     children:                    [ "prompt", "entry" ];
 }
 
@@ -109,16 +109,16 @@ listview {
     padding:                     0px;
     border:                      0px solid;
     border-radius:               0px;
-    border-color:                @selected;
-    background-color:            transparent;
-    text-color:                  @foreground;
+    border-color:                @surface0;
+    background-color:            @base;
+    text-color:                  @text;
     cursor:                      "default";
 }
 scrollbar {
     handle-width:                5px ;
-    handle-color:                @selected;
+    handle-color:                @overlay2;
     border-radius:               0px;
-    background-color:            @background-alt;
+    background-color:            @crust;
 }
 
 /*****----- Elements -----*****/
@@ -129,18 +129,18 @@ element {
     padding:                     8px;
     border:                      0px solid;
     border-radius:               0px;
-    border-color:                @selected;
-    background-color:            transparent;
-    text-color:                  @foreground;
+    border-color:                @surface2;
+    background-color:            @base;
+    text-color:                  @text;
     cursor:                      pointer;
 }
 element normal.normal {
-    background-color:            @background;
-    text-color:                  @foreground;
+    background-color:            @base;
+    text-color:                  @text;
 }
 element selected.normal {
-    background-color:            @background-alt;
-    text-color:                  @foreground;
+    background-color:            @crust;
+    text-color:                  @text;
 }
 element-icon {
     background-color:            transparent;
@@ -162,13 +162,13 @@ error-message {
     padding:                     15px;
     border:                      2px solid;
     border-radius:               12px;
-    border-color:                @selected;
-    background-color:            @background;
-    text-color:                  @foreground;
+    border-color:                @red;
+    background-color:            @base;
+    text-color:                  @red;
 }
 textbox {
-    background-color:            @background;
-    text-color:                  @foreground;
+    background-color:            @base;
+    text-color:                  @text;
     vertical-align:              0.5;
     horizontal-align:            0.0;
     highlight:                   none;

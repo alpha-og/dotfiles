@@ -1,35 +1,31 @@
 /* Catppuccin Mocha Theme for Rofi */
 
 * {
-    /* Base Colors */
-    background: #1e1e2e;    /* Base */
-    foreground: #cdd6f4;    /* Text */
-    
-    /* Surface Colors */
-    window-border-color: #313244;    /* Surface0 */
-    window-background: #45475a;    /* Surface1 */
-    active-window-border-color: #585b70;    /* Surface2 */
-    active-window-background: #7f849c;    /* Overlay1 */
-    
-    /* Highlight Colors */
-    highlight-background: #cba6f7;    /* Mauve */
-    highlight-foreground: #1e1e2e;    /* Base */
-    
-    /* Normal Item Colors */
-    normal-background: #45475a;    /* Surface1 */
-    normal-foreground: #f5e0dc;    /* Rosewater */
-    
-    /* Selected Item Colors */
-    selected-background: #f2cdcd;    /* Flamingo */
-    selected-foreground: #1e1e2e;    /* Base */
-    
-    /* Urgency Colors */
-    urgent-background: #f38ba8;    /* Red */
-    urgent-foreground: #1e1e2e;    /* Base */
-    
-    /* Other Colors */
-    border-color: #313244;    /* Surface0 */
-    window-border-width: 2px; /* Border width */
-    padding: 5px;             /* Padding */
+    rosewater: #f5e0dc;
+    flamingo: #f2cdcd;
+    pink: #f5c2e7;
+    mauve: #cba6f7;
+    red: #f38ba8;
+    maroon: #eba0ac;
+    peach: #fab387;
+    yellow: #f9e2af;
+    green: #a6e3a1;
+    teal: #94e2d5;
+    sky: #89dceb;
+    sapphire: #74c7ec;
+    blue: #89b4fa;
+    lavender: #b4befe;
+    text: #cdd6f4;
+    subtext1: #bac2de;
+    subtext0: #a6adc8;
+    overlay2: #9399b2;
+    overlay1: #7f849c;
+    overlay0: #6c7086;
+    surface2: #585b70;
+    surface1: #45475a;
+    surface0: #313244;
+    base: #1e1e2e;
+    mantle: #181825;
+    crust: #11111b;
 }
 

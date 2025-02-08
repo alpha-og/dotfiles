@@ -21,15 +21,15 @@ window {
   width:                    240px;
   border:                   2px;
   border-radius:            10px;
-  border-color:             @main-br;
-  background-color:         @main-bg;
+  border-color:             @surface0;
+  background-color:         @base;
   children:                 [ mainbox ];
 }
 
 mainbox {
   spacing:                  0;
   background-color:         inherit;
-  text-color:               @main-fg;
+  text-color:               @text;
   children:                 [ inputbar, listview ];
 }
 
@@ -39,7 +39,7 @@ inputbar {
   margin:                   6px;
   border-radius:            6px;
   spacing:                  inherit;
-  background-color:         @input-bg;
+  background-color:         @surface0;
   text-color:               inherit;
   children:                 [ prompt, entry ];
 }
@@ -69,13 +69,16 @@ element {
   padding:                  6px;
   cursor:                   pointer;
   background-color:         inherit;
-  text-color:               @main-fg;
+  text-color:               @text;
 }
 element selected active,
 element selected normal {
+  border:                  1px;
   border-radius:            6px;
-  background-color:         @select-bg;
-  text-color:               @select-fg;
+  border-color:             @surface2;
+  background-color:         @surface0;
+  text-color:               @mauve;
+
 }
 element-text {
   padding:                  0 6px;
