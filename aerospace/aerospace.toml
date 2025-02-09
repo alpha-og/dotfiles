@@ -152,10 +152,6 @@ alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'wezterm'
-run = "move-node-to-workspace 2"
-
-[[on-window-detected]]
 if.app-id = 'company.thebrowser.Browser'
 run = "move-node-to-workspace 3"
 [[on-window-detected]]
@@ -165,6 +161,18 @@ run = "move-node-to-workspace 3"
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
 run = "move-node-to-workspace 4"
+
+
+[[on-window-detected]]
+if.app-id="com.mitchellh.ghostty"
+run= [
+  # FIX: this is a workaround for https://github.com/nikitabobko/AeroSpace/issues/68
+  # this was also observed in:
+  # - https://github.com/ghostty-org/ghostty/issues/1840
+  # - https://github.com/ghostty-org/ghostty/issues/2006
+  "layout tiling",
+  "move-node-to-workspace 2",
+]
 
 # [[on-window-detected]]
 # if.app-name-regex-substring = 'fin'

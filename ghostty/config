@@ -1,3 +1,20 @@
 theme = catppuccin-mocha
 font-family = "Hack Nerd Font"
+font-size = 18
+macos-titlebar-style = hidden
 background-opacity = 0.95
+window-save-state = always 
+unfocused-split-opacity = 0.9
+keybind = cmd+r=reload_config
+keybind = cmd+h=goto_split:left
+keybind = cmd+j=goto_split:down
+keybind = cmd+k=goto_split:up
+keybind = cmd+l=goto_split:right
+keybind = cmd+shift+h=resize_split:left,10
+keybind = cmd+shift+j=resize_split:down,10
+keybind = cmd+shift+k=resize_split:up,10
+keybind = cmd+shift+l=resize_split:right,10
+keybind = cmd+w>s=new_split:down
+keybind = cmd+w>v=new_split:right
+keybind = cmd+w>m=toggle_split_zoom
+keybind = cmd+w>.=close_surface
