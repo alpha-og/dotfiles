@@ -193,7 +193,10 @@ local config = function()
 			["rust-analyzer"] = {
 				features = "all",
 				check = {
-					extraArgs = { "--all-targets" },
+					extraArgs = { "--target-dir", "target/check" },
+				},
+				diagnostics = {
+					enable = true,
 				},
 			},
 		},
