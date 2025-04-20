@@ -154,6 +154,7 @@ local config = function()
 		root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
 	})
 	lspconfig.eslint.setup({})
+	lspconfig.svelte.setup({})
 
 	-- bash
 	lspconfig.bashls.setup({
@@ -176,7 +177,9 @@ local config = function()
 	})
 
 	-- C/C++
-	lspconfig.clangd.setup({})
+	lspconfig.clangd.setup({
+		cmd = { "clangd", "--background-index", "--clang-tidy", "--compile-commands-dir=./**/ninja" },
+	})
 
 	-- astro
 	lspconfig.astro.setup({
@@ -189,9 +192,15 @@ local config = function()
 		settings = {
 			["rust-analyzer"] = {
 				features = "all",
+				check = {
+					extraArgs = { "--all-targets" },
+				},
 			},
 		},
 	})
+
+	-- verilog
+	lspconfig.verible.setup({})
 
 	-- java
 	-- lspconfig.jdtls.setup({
@@ -248,6 +257,8 @@ local config = function()
 			"java",
 			"c",
 			"cpp",
+			"verilog",
+			"systemverilog",
 		},
 		init_options = {
 			documentFormatting = true,
@@ -260,7 +271,7 @@ local config = function()
 		settings = {
 			languages = {
 				lua = { luacheck, stylua },
-				python = { flake8, black },
+				python = { black },
 				json = { eslint_d, prettier_d },
 				jsonc = { eslint_d, prettier_d },
 				sh = { shellcheck, shfmt },
@@ -274,7 +285,7 @@ local config = function()
 				html = { prettier_d },
 				css = { prettier_d },
 				astro = { prettier },
-				rust = { { formatCommand = "rustfmt --edition 2021 --emit=stdout", formatStdin = true } },
+				rust = { { formatCommand = "rustfmt --edition 2024 --emit=stdout", formatStdin = true } },
 				java = {},
 				go = { { formatCommand = "gofmt", formatStdin = true } },
 				c = { clangformat },
