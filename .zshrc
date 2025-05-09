@@ -1,3 +1,14 @@
+# ---- homebrew path----
+if [[  "$(uname)" == "Darwin" ]]
+then 
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+
+    # ---- mise path ----
+    eval "$(mise activate zsh)"
+fi
+
+
 # ---- custom keybindings ----
 bindkey '^]' clear-screen 
 # -- fzf --
