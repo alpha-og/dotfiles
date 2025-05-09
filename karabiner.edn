@@ -50,8 +50,8 @@
         ;     [:##caps_lock        :left_control     nil         {:alone :escape}]
         ;   ]}
         {
-         :des "open WezTerm"
-         :rules [[:!Oc "open -a WezTerm"]]
+         :des "open Ghostty"
+         :rules [[:!Oc "open -a Ghostty"]]
         }
 
         {
