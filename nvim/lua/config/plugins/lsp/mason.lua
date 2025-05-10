@@ -17,6 +17,7 @@ local config = function()
 	mason_lspconfig.setup({
 		-- list of lsp for mason to install
 		ensure_installed = {
+            "efm",
 			"ts_ls",
 			"eslint",
 			"html",
