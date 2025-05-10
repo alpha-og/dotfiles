@@ -3,8 +3,7 @@
 -- vim.g.maplocalleader = ";"
 
 -- open explorer
--- vim.keymap.set("n", "<leader>ee", vim.cmd.Ex, { desc = "Open explorer" })
-vim.keymap.set("n", "<leader>ee", "<cmd>Oil<CR>", { desc = "Open explorer with oil.nvim" })
+vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>", { desc = "Open explorer with oil.nvim" })
 
 -- Move lines up and down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
