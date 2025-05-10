@@ -11,6 +11,11 @@ return {
 				accept_word = "<C-y>",
 			},
 			disable_keymaps = true,
+			ignore_filetypes = {
+				c = true,
+				cpp = true,
+				rust = true,
+			},
 		})
 		vim.keymap.set("i", "<C-l>", function()
 			local luasnip = require("luasnip")
