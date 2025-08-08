@@ -1,15 +1,10 @@
-# ---- homebrew path----
 
-if [[ -d "/opt/homebrew/bin" ]] && [[ "$(uname)" == "Darwin" ]]
+if [[ "$(uname)" != "Darwin" ]]
 then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-    eval "$(mise activate zsh)"
-else
     eval "$("$HOME/.local/bin/mise" activate zsh)"
 fi
 
 
-# ---- mise path ----
 
 # ---- pnpm path ----
 if [[ "$(uname)" == "Darwin" ]]
