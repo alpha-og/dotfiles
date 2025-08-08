@@ -1,41 +1,12 @@
 -- plugin configuration for handling neovim's native lsp
 
 local create_lsp_keymaps = function()
-	local telescope_builtin = require("telescope.builtin")
 	vim.api.nvim_create_autocmd("LspAttach", {
 		callback = function(event)
 			local opts = { buffer = event.buf, noremap = true, silent = true }
 			opts.desc = "Hover"
 			vim.keymap.set("n", "K", function()
 				vim.lsp.buf.hover()
-			end, opts)
-			opts.desc = "Go to Definition"
-			-- vim.keymap.set("n", "gd", function()
-			-- 	vim.lsp.buf.definition()
-			-- end, opts)
-			vim.keymap.set("n", "<leader>gd", telescope_builtin.lsp_definitions, opts)
-			opts.desc = "Declaration"
-			vim.keymap.set("n", "gD", function()
-				vim.lsp.buf.declaration()
-			end, opts)
-			opts.desc = "Go to Implementation"
-			-- vim.keymap.set("n", "gi", function()
-			-- 	vim.lsp.buf.implementation()
-			-- end, opts)
-			vim.keymap.set("n", "<leader>gi", telescope_builtin.lsp_implementations, opts)
-			opts.desc = "Go to Type Definition"
-			-- vim.keymap.set("n", "go", function()
-			-- 	vim.lsp.buf.type_definition()
-			-- end, opts)
-			vim.keymap.set("n", "<leader>gt", telescope_builtin.lsp_type_definitions, opts)
-			opts.desc = "List LSP references for the word under the cursor"
-			-- vim.keymap.set("n", "gr", function()
-			-- 	vim.lsp.buf.references()
-			-- end, opts)
-			vim.keymap.set("n", "<leader>gr", telescope_builtin.lsp_references, opts)
-			opts.desc = "Signature Help"
-			vim.keymap.set("n", "gs", function()
-				vim.lsp.buf.signature_help()
 			end, opts)
 			opts.desc = "Rename"
 			vim.keymap.set("n", "<F2>", function()
@@ -46,22 +17,14 @@ local create_lsp_keymaps = function()
 				vim.lsp.buf.format({ async = true })
 			end, opts)
 			opts.desc = "Show Code Actions"
-			-- vim.keymap.set("n", "ca", function()
-			-- 	vim.lsp.buf.code_action()
-			-- end, opts)
 			vim.keymap.set("n", "<leader>ca", "<CMD>Lspsaga code_action<CR>", opts)
 			opts.desc = "Show line diagnostics"
 			vim.keymap.set("n", "<leader>dl", vim.diagnostic.open_float, opts)
 			opts.desc = "List Diagnostics for current buffer"
-			vim.keymap.set("n", "<leader>db", function()
-				telescope_builtin.diagnostics({ bufnr = 0 })
-			end, opts)
-			opts.desc = "List Diagnostics for all buffers"
-			vim.keymap.set("n", "<leader>dw", telescope_builtin.diagnostics, opts)
 			opts.desc = "Go to Next Diagnostic"
-			vim.keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, opts)
+			vim.keymap.set("n", "<leader>dn", vim.diagnostic.get_next, opts)
 			opts.desc = "Go to Prev Diagnostic"
-			vim.keymap.set("n", "<leader>dp", vim.diagnostic.goto_prev, opts)
+			vim.keymap.set("n", "<leader>dp", vim.diagnostic.get_prev, opts)
 		end,
 	})
 end
@@ -224,9 +187,12 @@ local config = function()
 	-- 	on_attach = on_attach,
 	-- })
 
+	-- toml
+	lspconfig.taplo.setup({})
+
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
-	local flake8 = require("efmls-configs.linters.flake8")
+	-- local flake8 = require("efmls-configs.linters.flake8")
 	local black = require("efmls-configs.formatters.black")
 	local eslint_d = require("efmls-configs.linters.eslint_d")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
@@ -237,6 +203,8 @@ local config = function()
 	-- local cpplint = require("efmls-configs.linters.cpplint")
 	local clangformat = require("efmls-configs.formatters.clang_format")
 	-- local alex = require("efmls-configs.linters.alex")
+	local taplo = require("efmls-configs.formatters.taplo")
+
 	-- configure efm server
 	lspconfig.efm.setup({
 		filetypes = {
@@ -262,6 +230,7 @@ local config = function()
 			"cpp",
 			"verilog",
 			"systemverilog",
+			"toml",
 		},
 		init_options = {
 			documentFormatting = true,
@@ -272,6 +241,7 @@ local config = function()
 			completion = true,
 		},
 		settings = {
+			rootMarkers = { ".git/" },
 			languages = {
 				lua = { luacheck, stylua },
 				python = { black },
@@ -293,6 +263,7 @@ local config = function()
 				go = { { formatCommand = "gofmt", formatStdin = true } },
 				c = { clangformat },
 				cpp = { clangformat },
+				toml = { taplo },
 			},
 		},
 	})

@@ -2,7 +2,7 @@
 
 local config = function()
 	local mason = require("mason")
-	local mason_lspconfig = require("mason-lspconfig")
+	-- local mason_lspconfig = require("mason-lspconfig")
 	local mason_tool_installer = require("mason-tool-installer")
 	mason.setup({
 		ui = {
@@ -14,31 +14,32 @@ local config = function()
 		},
 	})
 
-	mason_lspconfig.setup({
-		-- list of lsp for mason to install
-		ensure_installed = {
-            "efm",
-			"ts_ls",
-			"eslint",
-			"html",
-			"cssls",
-			"tailwindcss",
-			"svelte",
-			"lua_ls",
-			-- "graphql",
-			"emmet_ls",
-			-- "prismals",
-			"pyright",
-			"astro",
-			"clangd",
-			"bashls",
-			"jsonls",
-			"rust_analyzer",
-			"biome",
-		},
-		-- auto-install configured servers (with lspconfig)
-		automatic_installation = true, -- not the same as ensure_installed
-	})
+	-- mason_lspconfig.setup({
+	--     -- list of lsp for mason to install
+	--     ensure_installed = {
+	--         "efm",
+	--         "ts_ls",
+	--         "eslint",
+	--         "html",
+	--         "cssls",
+	--         "tailwindcss",
+	--         "svelte",
+	--         "lua_ls",
+	--         -- "graphql",
+	--         "emmet_ls",
+	--         -- "prismals",
+	--         "pyright",
+	--         "astro",
+	--         "clangd",
+	--         "bashls",
+	--         "jsonls",
+	--         "rust_analyzer",
+	--         "biome",
+	--         "taplo",
+	--     },
+	--     -- auto-install configured servers (with lspconfig)
+	--     automatic_installation = true, -- not the same as ensure_installed
+	-- })
 
 	mason_tool_installer.setup({
 		ensure_installed = {
@@ -56,6 +57,7 @@ local config = function()
 			"clang-format", -- c/cpp formatter
 			"alex", -- markdown linter
 			"codelldb", -- lldb debugger
+			"taplo", -- toml formatter
 		},
 		auto_update = true,
 	})
