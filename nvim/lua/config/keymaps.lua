@@ -25,3 +25,10 @@ vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete block without copying d
 -- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Previous match" })
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Next match" })
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Previous match" })
+
+-- restart lsp server
+vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<CR>", { desc = "Restart lsp server" })
+
+-- scroll up and down
+vim.keymap.set("n", "<S-u>", "<C-u>", { desc = "Scroll up" })
+vim.keymap.set("n", "<S-d>", "<C-d>", { desc = "Scroll down" })
