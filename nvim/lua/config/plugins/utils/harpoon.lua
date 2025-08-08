@@ -4,28 +4,44 @@ local config = function()
 	local harpoon = require("harpoon")
 	harpoon:setup({})
 
-	-- basic telescope configuration
-	local conf = require("telescope.config").values
-	local function toggle_telescope(harpoon_files)
-		local file_paths = {}
-		for _, item in ipairs(harpoon_files.items) do
-			table.insert(file_paths, item.value)
+	local normalize_list = function(t)
+		local normalized = {}
+		for _, v in pairs(t) do
+			if v ~= nil then
+				table.insert(normalized, v)
+			end
 		end
-
-		require("telescope.pickers")
-			.new({}, {
-				prompt_title = "Harpoon",
-				finder = require("telescope.finders").new_table({
-					results = file_paths,
-				}),
-				previewer = conf.file_previewer({}),
-				sorter = conf.generic_sorter({}),
-			})
-			:find()
+		return normalized
 	end
-	vim.keymap.set("n", "<C-e>", function()
-		toggle_telescope(harpoon:list())
-	end, { noremap = true, silent = true, desc = "Harpoon Telescope" })
+
+	vim.keymap.set("n", "<leader>a", function()
+		Snacks.picker({
+			finder = function()
+				local file_paths = {}
+				local list = normalize_list(harpoon:list().items)
+				for _, item in ipairs(list) do
+					table.insert(file_paths, { text = item.value, file = item.value })
+				end
+				return file_paths
+			end,
+			win = {
+				input = {
+					keys = { ["dd"] = { "harpoon_delete", mode = { "n", "x" } } },
+				},
+				list = {
+					keys = { ["dd"] = { "harpoon_delete", mode = { "n", "x" } } },
+				},
+			},
+			actions = {
+				harpoon_delete = function(picker, item)
+					local to_remove = item or picker:selected()
+					harpoon:list():remove({ value = to_remove.text })
+					harpoon:list().items = normalize_list(harpoon:list().items)
+					picker:find({ refresh = true })
+				end,
+			},
+		})
+	end, { noremap = true, silent = true, desc = "harpoon picker" })
 end
 
 return {
@@ -41,8 +57,9 @@ return {
 			end,
 			desc = "harpoon file",
 		},
+
 		{
-			"<leader>a",
+			"<C-e>",
 			function()
 				local harpoon = require("harpoon")
 				harpoon.ui:toggle_quick_menu(harpoon:list())
