@@ -1,45 +1,33 @@
--- auto-format on save for go files
-local lsp_fmt_group = vim.api.nvim_create_augroup("LspFormattingGroup", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = "*.go",
-	callback = function()
-		local params = vim.lsp.util.make_range_params()
-		params.context = { only = { "source.organizeImports" } }
-		-- buf_request_sync defaults to a 1000ms timeout. Depending on your
-		-- machine and codebase, you may want longer. Add an additional
-		-- argument after params if you find that you have to write the file
-		-- twice for changes to be saved.
-		-- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-		local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
-		for cid, res in pairs(result or {}) do
-			for _, r in pairs(res.result or {}) do
-				if r.edit then
-					local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
-					vim.lsp.util.apply_workspace_edit(r.edit, enc)
-				end
-			end
-		end
-		vim.lsp.buf.format({ async = false })
-	end,
-})
+-- auto-format: https://vonheikemen.github.io/devlog/tools/neovim-lsp-client-guide/
+local fmt_group = vim.api.nvim_create_augroup("autoformat_cmds", { clear = true })
 
--- auto-format on save for efm attached files
-vim.api.nvim_create_autocmd("BufWritePre", {
-	group = lsp_fmt_group,
-	callback = function()
-		if vim.lsp.get_clients then
-			local efm = vim.lsp.get_clients({ name = "efm" })
-			if not vim.tbl_isempty(efm) then
-				if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
-					return vim.lsp.buf.format({ name = "efm", async = true })
-				else
-					return vim.lsp.buf.format({ name = "efm", async = false })
-				end
-			end
-		else
-			return
-		end
-	end,
+local function setup_autoformat(event)
+	local id = vim.tbl_get(event, "data", "client_id")
+	local client = id and vim.lsp.get_client_by_id(id)
+	if client == nil then
+		return
+	end
+	vim.api.nvim_clear_autocmds({ group = fmt_group, buffer = event.buf })
+
+	local buf_format = function(e)
+		vim.lsp.buf.format({
+			bufnr = e.buf,
+			async = false,
+			timeout_ms = 10000,
+		})
+	end
+
+	vim.api.nvim_create_autocmd("BufWritePre", {
+		buffer = event.buf,
+		group = fmt_group,
+		desc = "Format current buffer",
+		callback = buf_format,
+	})
+end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	desc = "Setup format on save",
+	callback = setup_autoformat,
 })
 
 -- highlight on yank
