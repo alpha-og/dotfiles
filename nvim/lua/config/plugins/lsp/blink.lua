@@ -31,7 +31,7 @@ return {
 	-- build = 'nix run .#build-plugin',
 
 	opts = {
-		keymap = { preset = "default" },
+		keymap = { preset = "default", ["<C-o>"] = { "show", "show_documentation", "hide_documentation" } },
 
 		appearance = {
 			use_nvim_cmp_as_default = true,
