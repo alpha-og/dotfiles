@@ -124,6 +124,8 @@ local config = function()
 		filetypes = { "sh", "aliasrc" },
 	})
 
+	lspconfig.cssls.setup({})
+
 	-- typescriptreact, javascriptreact, css, sass, scss, less, svelte, vue
 	lspconfig.emmet_ls.setup({
 		filetypes = {
