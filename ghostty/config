@@ -1,10 +1,11 @@
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 font-family = "Hack Nerd Font"
 font-size = 18
 macos-titlebar-style = hidden
-background-opacity = 0.95
+background-opacity = 0.5
+background-blur = 10
 window-save-state = always 
-unfocused-split-opacity = 0.9
+unfocused-split-opacity = 0.5
 keybind = cmd+r=reload_config
 keybind = cmd+h=goto_split:left
 keybind = cmd+j=goto_split:down
