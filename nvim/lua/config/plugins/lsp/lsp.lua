@@ -30,8 +30,69 @@ local create_lsp_keymaps = function()
 end
 
 local config = function()
+	local mason = require("mason")
+	local mason_lspconfig = require("mason-lspconfig")
+	local mason_tool_installer = require("mason-tool-installer")
+	mason.setup({
+		ui = {
+			icons = {
+				package_installed = "✓",
+				package_pending = "➜",
+				package_uninstalled = "✗",
+			},
+		},
+	})
+
+	mason_lspconfig.setup({
+		-- list of lsp for mason to install
+		ensure_installed = {
+			"efm",
+			"ts_ls",
+			"eslint",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"svelte",
+			"lua_ls",
+			-- "graphql",
+			"emmet_ls",
+			-- "prismals",
+			"pyright",
+			"astro",
+			"clangd",
+			"bashls",
+			"jsonls",
+			"rust_analyzer",
+			"biome",
+			"taplo",
+		},
+		-- auto-install configured servers (with lspconfig)
+		automatic_installation = true, -- not the same as ensure_installed
+	})
+
+	mason_tool_installer.setup({
+		ensure_installed = {
+			"luacheck", -- lua linter
+			"stylua", -- lua formatter
+			"flake8", -- python linter
+			"black", -- python formatter
+			"prettierd", -- prettier daemon formatter
+			"prettier", -- prettier formatter
+			"eslint_d", -- ts/js linter
+			"fixjson", -- json formatter
+			"shellcheck", -- shell linter
+			"shfmt", -- shell formatter
+			"cpplint", -- cpp linter
+			"clang-format", -- c/cpp formatter
+			"alex", -- markdown linter
+			"codelldb", -- lldb debugger
+			"taplo", -- toml formatter
+		},
+		auto_update = true,
+	})
+
 	create_lsp_keymaps()
-	local lspconfig = require("lspconfig")
+	local lspconfig = vim.lsp.config
 
 	-- Reserve a space in the gutter
 	-- This will avoid an annoying layout shift in the screen
@@ -46,9 +107,9 @@ local config = function()
 
 	-- Add blink.cmp capabilities settings to lspconfig
 	-- This should be executed before you configure any language server
-	local lspconfig_defaults = lspconfig.util.default_config
-	local capabilities = require("blink.cmp").get_lsp_capabilities()
-	lspconfig_defaults.capabilities = vim.tbl_deep_extend("force", lspconfig_defaults.capabilities, capabilities)
+	-- local lspconfig_defaults = lspconfig.util.default_config
+	-- local capabilities = require("blink.cmp").get_lsp_capabilities()
+	-- lspconfig_defaults.capabilities = vim.tbl_deep_extend("force", lspconfig_defaults.capabilities, capabilities)
 
 	-- This is where you enable features that only work
 	-- if there is a language server active in the file
@@ -61,15 +122,28 @@ local config = function()
 	end
 
 	-- tailwind
-	lspconfig.tailwindcss.setup({})
+	lspconfig.tailwindcss = {
+		filetypes = {
+			"html",
+			"css",
+			"scss",
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact",
+			"svelte",
+			"astro",
+			"vue",
+		},
+	}
 
 	-- mdx and markdown
-	lspconfig.marksman.setup({
+	lspconfig.marksman = {
 		filetypes = { "mdx", "markdown" },
-	})
+	}
 
 	-- lua
-	lspconfig.lua_ls.setup({
+	lspconfig.lua_ls = {
 		settings = { -- custom settings for lua
 			Lua = {
 				-- make the language server recognize "vim" global
@@ -85,15 +159,15 @@ local config = function()
 				},
 			},
 		},
-	})
+	}
 
 	-- json
-	lspconfig.jsonls.setup({
+	lspconfig.jsonls = {
 		filetypes = { "json", "jsonc" },
-	})
+	}
 
 	-- python
-	lspconfig.pyright.setup({
+	lspconfig.pyright = {
 		settings = {
 			pyright = {
 				disableOrganizeImports = false,
@@ -105,29 +179,33 @@ local config = function()
 				},
 			},
 		},
-	})
-	-- -- typescript
-	lspconfig.ts_ls.setup({
+	}
+
+	-- typescript
+	lspconfig.ts_ls = {
 		filetypes = {
 			"typescript",
 			"javascript",
 			"typescriptreact",
 			"javascriptreact",
 		},
-		root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
-	})
-	lspconfig.eslint.setup({})
-	lspconfig.svelte.setup({})
+		root_dir = function(bufnr, on_dir)
+			on_dir(vim.fs.root(bufnr, { "package.json", "tsconfig.json", ".git" }))
+		end,
+	}
+
+	-- lspconfig.eslint = {}
+	-- lspconfig.svelte = {}
 
 	-- bash
-	lspconfig.bashls.setup({
+	lspconfig.bashls = {
 		filetypes = { "sh", "aliasrc" },
-	})
+	}
 
-	lspconfig.cssls.setup({})
+	lspconfig.cssls = {}
 
 	-- typescriptreact, javascriptreact, css, sass, scss, less, svelte, vue
-	lspconfig.emmet_ls.setup({
+	lspconfig.emmet_ls = {
 		filetypes = {
 			"typescriptreact",
 			"javascriptreact",
@@ -139,20 +217,20 @@ local config = function()
 			"vue",
 			"html",
 		},
-	})
+	}
 
 	-- C/C++
-	lspconfig.clangd.setup({
+	lspconfig.clangd = {
 		cmd = { "clangd", "--background-index", "--clang-tidy", "--compile-commands-dir=./**/ninja" },
-	})
+	}
 
 	-- astro
-	lspconfig.astro.setup({
+	lspconfig.astro = {
 		filetypes = { "astro" },
-	})
+	}
 
 	-- rust
-	lspconfig.rust_analyzer.setup({
+	lspconfig.rust_analyzer = {
 		filetypes = { "rust" },
 		settings = {
 			["rust-analyzer"] = {
@@ -165,13 +243,13 @@ local config = function()
 				},
 			},
 		},
-	})
+	}
 
 	-- verilog
-	lspconfig.verible.setup({})
+	lspconfig.verible = {}
 
 	-- java
-	-- lspconfig.jdtls.setup({
+	-- lspconfig.jdtls = {
 	-- 	filetypes = { "java" },
 	-- 	handlers = {
 	-- 		["language/status"] = function(_, result)
@@ -181,16 +259,16 @@ local config = function()
 	-- 			-- disable progress updates.
 	-- 		end,
 	-- 	},
-	-- })
+	-- }
 
 	-- go
-	-- lspconfig.gopls.setup({
-	-- 	capabilities = capabilities,
-	-- 	on_attach = on_attach,
-	-- })
+	lspconfig.gopls = {
+		capabilities = capabilities,
+		on_attach = on_attach,
+	}
 
 	-- toml
-	lspconfig.taplo.setup({})
+	lspconfig.taplo = {}
 
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
@@ -208,7 +286,7 @@ local config = function()
 	local taplo = require("efmls-configs.formatters.taplo")
 
 	-- configure efm server
-	lspconfig.efm.setup({
+	lspconfig.efm = {
 		filetypes = {
 			"lua",
 			"python",
@@ -268,15 +346,17 @@ local config = function()
 				toml = { taplo },
 			},
 		},
-	})
+	}
 end
 
 return {
-	"neovim/nvim-lspconfig",
+	"mason-org/mason-lspconfig.nvim",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
-		"williamboman/mason.nvim",
+		"mason-org/mason.nvim",
 		"creativenull/efmls-configs-nvim",
+		"neovim/nvim-lspconfig",
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		{
 			"folke/lazydev.nvim",
 			ft = "lua", -- only load on lua files
