@@ -1,6 +1,7 @@
 [tools]
 node = "latest"
-python = "3.11"
-deno = "latest"
 go = "latest"
-bun = "latest"
+python = "3.13"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]
