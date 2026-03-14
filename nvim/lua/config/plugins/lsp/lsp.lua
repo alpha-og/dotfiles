@@ -65,6 +65,7 @@ local config = function()
 			"rust_analyzer",
 			"biome",
 			"taplo",
+			"vue_ls",
 		},
 		-- auto-install configured servers (with lspconfig)
 		automatic_installation = true, -- not the same as ensure_installed
@@ -87,6 +88,7 @@ local config = function()
 			"alex", -- markdown linter
 			"codelldb", -- lldb debugger
 			"taplo", -- toml formatter
+			"vue_ls",
 		},
 		auto_update = true,
 	})
@@ -181,8 +183,42 @@ local config = function()
 		},
 	}
 
+	local vue_language_server_path = vim.fn.stdpath("data")
+		.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+	local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
+	local vue_plugin = {
+		name = "@vue/typescript-plugin",
+		location = vue_language_server_path,
+		languages = { "vue" },
+		configNamespace = "typescript",
+	}
+
+	lspconfig.vtsls = {
+		settings = {
+			vtsls = {
+				tsserver = {
+					globalPlugins = {
+						vue_plugin,
+					},
+				},
+			},
+		},
+		filetypes = tsserver_filetypes,
+	}
+
+	lspconfig.vue_ls = {}
+
 	-- typescript
 	lspconfig.ts_ls = {
+		init_options = {
+			plugins = {
+				{
+					name = "@vue/typescript-plugin",
+					location = vue_language_server_path,
+					languages = { "vue" },
+				},
+			},
+		},
 		filetypes = {
 			"typescript",
 			"javascript",
@@ -193,6 +229,41 @@ local config = function()
 			on_dir(vim.fs.root(bufnr, { "package.json", "tsconfig.json", ".git" }))
 		end,
 	}
+
+	-- vue (volar)
+	-- lspconfig.volar = {
+	-- 	filetypes = { "vue" },
+	-- 	init_options = {
+	-- 		vue = {
+	-- 			hybridMode = false,
+	-- 		},
+	-- 	},
+	-- 	settings = {
+	-- 		typescript = {
+	-- 			inlayHints = {
+	-- 				enumMemberValues = {
+	-- 					enabled = true,
+	-- 				},
+	-- 				functionLikeReturnTypes = {
+	-- 					enabled = true,
+	-- 				},
+	-- 				propertyDeclarationTypes = {
+	-- 					enabled = true,
+	-- 				},
+	-- 				parameterTypes = {
+	-- 					enabled = true,
+	-- 					suppressWhenArgumentMatchesName = true,
+	-- 				},
+	-- 				variableTypes = {
+	-- 					enabled = true,
+	-- 				},
+	-- 			},
+	-- 		},
+	-- 	},
+	-- root_dir = function(bufnr, on_dir)
+	-- 	on_dir(vim.fs.root(bufnr, { "package.json", "tsconfig.json", ".git" }))
+	-- end,
+	-- }
 
 	-- lspconfig.eslint = {}
 	-- lspconfig.svelte = {}
@@ -221,7 +292,41 @@ local config = function()
 
 	-- C/C++
 	lspconfig.clangd = {
-		cmd = { "clangd", "--background-index", "--clang-tidy", "--compile-commands-dir=./**/ninja" },
+		cmd = {
+			"clangd",
+			"--background-index",
+			"--clang-tidy",
+		},
+		-- clangd ignores fallbackFlags when it finds a compile_commands.json,
+		-- so this only kicks in for rootless files (leetcode, quick scratch files, etc.)
+		--
+		-- needed because leetcode.nvim injects `#include <bits/stdc++.h>` and
+		-- `using namespace std;` virtually -- clangd never sees them, only the
+		-- raw file on disk. so we force-include our own stdc++.h to match.
+		--
+		-- can't just use bits/stdc++.h directly, apple clang doesn't ship it (gcc thing).
+		-- maintaining a manual one at the path below, add headers there as needed.
+		init_options = {
+			fallbackFlags = {
+				"-std=c++17",
+				"-xc++",
+				"-include",
+				vim.fn.expand("~/.config/nvim/lua/config/plugins/lsp/cpp_headers/stdc++.h"),
+			},
+		},
+		root_dir = function(bufnr, on_dir)
+			local root = vim.fs.root(bufnr, {
+				".clangd",
+				".clang-tidy",
+				".clang-format",
+				"compile_commands.json",
+				"compile_flags.txt",
+				".git",
+			})
+			-- without a root clangd won't apply fallbackFlags, so fall back to
+			-- the buffer's directory instead of returning nil
+			on_dir(root or vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr)))
+		end,
 	}
 
 	-- astro
@@ -262,10 +367,7 @@ local config = function()
 	-- }
 
 	-- go
-	lspconfig.gopls = {
-		capabilities = capabilities,
-		on_attach = on_attach,
-	}
+	lspconfig.gopls = {}
 
 	-- toml
 	lspconfig.taplo = {}
@@ -311,6 +413,7 @@ local config = function()
 			"verilog",
 			"systemverilog",
 			"toml",
+			"vue",
 		},
 		init_options = {
 			documentFormatting = true,
@@ -337,6 +440,7 @@ local config = function()
 				mdx = { prettier_d },
 				html = { prettier_d },
 				css = { prettier_d },
+				vue = { prettier_d },
 				astro = { prettier },
 				rust = { { formatCommand = "rustfmt --edition 2024 --emit=stdout", formatStdin = true } },
 				java = {},

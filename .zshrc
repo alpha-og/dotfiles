@@ -125,3 +125,9 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
+# opencode
+export PATH=/Users/athulanoop/.opencode/bin:$PATH
+
+# leetcode.nvim alias
+alias lc="nvim leetcode.nvim"
