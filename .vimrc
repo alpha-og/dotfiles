@@ -41,7 +41,7 @@ set statusline=%f\ %m%r%=%{&fileencoding?&fileencoding:&encoding}\ %{&fileformat
 
 " Netrw options
 let g:netrw_banner = 0
-let g:netrw_liststyle = 3
+let g:netrw_liststyle = 4
 let g:netrw_hide = 0
 let g:netrw_winsize = 25
 
@@ -690,3 +690,295 @@ if exists('$TMUX')
 endif
 
 let &fillchars .= ',eob: '
+
+function! s:minioil() abort
+  let l:dir = expand('%:p:h')
+  if empty(l:dir) | let l:dir = getcwd() | endif
+  
+  " Grab all visible and hidden files (excluding . and ..)
+  let l:paths = split(globpath(l:dir, '*'), '\n') + split(globpath(l:dir, '.*'), '\n')
+  let l:files = []
+  for l:p in l:paths
+    let l:name = fnamemodify(l:p, ':t')
+    if l:name !=# '.' && l:name !=# '..'
+      call add(l:files, l:name)
+    endif
+  endfor
+  let l:files = uniq(sort(l:files))
+
+  " Open a clean, temporary tab
+  tabnew
+  setlocal buftype=acwrite bufhidden=wipe noswapfile
+  let b:minioil_dir = l:dir
+  let b:minioil_orig = l:files
+  
+  let l:lines = [
+    \ "# MINI-OIL: Edit the names on the RIGHT side of the '->' arrow.",
+    \ "# Delete a line completely to delete the file.",
+    \ "# Save (:w) to apply your changes. Press 'q' to abort.",
+    \ ""
+    \ ]
+  for l:f in l:files
+    call add(l:lines, l:f . '  ->  ' . l:f)
+  endfor
+
+  call setline(1, l:lines)
+  
+  " Hook the save command to our apply function
+  autocmd BufWriteCmd <buffer> call s:minioil_apply()
+  nnoremap <buffer> <silent> q :tabclose<CR>
+  
+  " Make it pretty
+  syntax match Comment "^#.*"
+  syntax match Special "  ->  "
+endfunction
+
+function! s:minioil_apply() abort
+  let l:dir = b:minioil_dir
+  let l:orig = b:minioil_orig
+  let l:lines = getline(1, '$')
+  
+  let l:to_keep = {}
+  let l:to_rename = {}
+
+  " Parse the buffer
+  for l:line in l:lines
+    if l:line =~# '^\s*#' || empty(l:line) | continue | endif
+    let l:parts = split(l:line, '  ->  ')
+    if len(l:parts) >= 2
+      let l:old = trim(l:parts[0])
+      let l:new = trim(l:parts[1])
+      let l:to_keep[l:old] = 1
+      if l:old !=# l:new
+        let l:to_rename[l:old] = l:new
+      endif
+    endif
+  endfor
+
+  " 1. Process Deletions safely (prompts for confirmation to prevent accidents)
+  for l:old in l:orig
+    if !has_key(l:to_keep, l:old)
+      let l:path = l:dir . '/' . l:old
+      if confirm("Delete '" . l:old . "'?", "&Yes\n&No", 2) == 1
+        if isdirectory(l:path)
+          call delete(l:path, 'd')
+        else
+          call delete(l:path)
+        endif
+        echom "Deleted: " . l:old
+      endif
+    endif
+  endfor
+
+  " 2. Process Renames
+  for [l:old, l:new] in items(l:to_rename)
+    let l:oldpath = l:dir . '/' . l:old
+    let l:newpath = l:dir . '/' . l:new
+    if rename(l:oldpath, l:newpath) == 0
+      echom "Renamed: " . l:old . " -> " . l:new
+    else
+      echohl ErrorMsg | echom "Failed to rename: " . l:old | echohl None
+    endif
+  endfor
+
+  " Close the scratch buffer and report success
+  setlocal nomodified
+  tabclose
+  redraw | echo "Mini-Oil: Filesystem updated."
+endfunction
+
+function! s:minioil() abort
+  let l:dir = expand('%:p:h')
+  if empty(l:dir) | let l:dir = getcwd() | endif
+
+  let l:paths = split(globpath(l:dir, '*'), '\n') + split(globpath(l:dir, '.*'), '\n')
+  let l:files = []
+  for l:p in l:paths
+    let l:name = fnamemodify(l:p, ':t')
+    if l:name !=# '.' && l:name !=# '..'
+      " trailing slash flags directories for the create-path
+      call add(l:files, isdirectory(l:p) ? l:name . '/' : l:name)
+    endif
+  endfor
+  let l:files = uniq(sort(l:files))
+
+  tabnew
+  setlocal buftype=acwrite bufhidden=wipe noswapfile filetype=minioil
+  let b:minioil_dir = l:dir
+  let b:minioil_orig = l:files
+
+  let l:lines = [
+    \ "# MINI-OIL: Edit the names on the RIGHT side of the '->' arrow.",
+    \ "# Delete a line completely to delete the file/directory.",
+    \ "# Add a new line 'name  ->  name' to create a file. Trailing '/' creates a directory.",
+    \ "# Save (:w) to apply your changes. Press 'q' to abort.",
+    \ ""
+    \ ]
+  for l:f in l:files
+    call add(l:lines, l:f . '  ->  ' . l:f)
+  endfor
+  call setline(1, l:lines)
+
+  autocmd BufWriteCmd <buffer> call s:minioil_apply()
+  nnoremap <buffer> <silent> q :tabclose<CR>
+
+  syntax match Comment "^#.*"
+  syntax match Special "  ->  "
+endfunction
+
+function! s:minioil_apply() abort
+  let l:dir = b:minioil_dir
+  let l:orig = b:minioil_orig
+  let l:lines = getline(1, '$')
+
+  let l:to_keep = {}
+  let l:to_rename = {}
+
+  for l:line in l:lines
+    if l:line =~# '^\s*#' || empty(trim(l:line)) | continue | endif
+    let l:parts = split(l:line, '  ->  ')
+    if len(l:parts) >= 2
+      let l:old = trim(l:parts[0])
+      let l:new = trim(join(l:parts[1:], '  ->  '))
+      let l:to_keep[l:old] = 1
+      if l:old !=# l:new
+        let l:to_rename[l:old] = l:new
+      endif
+    endif
+  endfor
+
+  " 1. Gather deletions and confirm as a single batch
+  let l:to_delete = []
+  for l:old in l:orig
+    if !has_key(l:to_keep, l:old)
+      call add(l:to_delete, l:old)
+    endif
+  endfor
+
+  if !empty(l:to_delete)
+    let l:msg = "Delete the following?\n" . join(l:to_delete, "\n")
+    if confirm(l:msg, "&Yes\n&No", 2) != 1
+      setlocal nomodified
+      redraw | echo "Mini-Oil: Aborted, no changes made."
+      return
+    endif
+  endif
+
+  " 2. Process deletions (recursive for non-empty dirs, error checked)
+  for l:old in l:to_delete
+    let l:name = substitute(l:old, '/$', '', '')
+    let l:path = l:dir . '/' . l:name
+    if isdirectory(l:path)
+      if delete(l:path, 'rf') != 0
+        echohl ErrorMsg | echom "Failed to delete directory: " . l:old | echohl None
+        continue
+      endif
+    else
+      if delete(l:path) != 0
+        echohl ErrorMsg | echom "Failed to delete: " . l:old | echohl None
+        continue
+      endif
+    endif
+    echom "Deleted: " . l:old
+  endfor
+
+  " 3. Process renames in two passes to avoid collisions/swaps/chains
+  let l:tmp_renames = {}
+  for [l:old, l:new] in items(l:to_rename)
+    let l:oldname = substitute(l:old, '/$', '', '')
+    let l:newname = substitute(l:new, '/$', '', '')
+    let l:oldpath = l:dir . '/' . l:oldname
+    let l:tmpname = l:newname . '.minioil_tmp_' . reltimestr(reltime())
+    let l:tmppath = l:dir . '/' . l:tmpname
+    if rename(l:oldpath, l:tmppath) == 0
+      let l:tmp_renames[l:tmpname] = l:newname
+    else
+      echohl ErrorMsg | echom "Failed to rename: " . l:old | echohl None
+    endif
+  endfor
+  for [l:tmpname, l:newname] in items(l:tmp_renames)
+    let l:tmppath = l:dir . '/' . l:tmpname
+    let l:newpath = l:dir . '/' . l:newname
+    if rename(l:tmppath, l:newpath) == 0
+      echom "Renamed: " . l:newname
+    else
+      echohl ErrorMsg | echom "Failed to rename to: " . l:newname | echohl None
+    endif
+  endfor
+
+  " 4. Process new entries (lines where old == new, not present originally)
+  for l:old in keys(l:to_keep)
+    if index(l:orig, l:old) == -1 && !has_key(l:to_rename, l:old)
+      let l:path = l:dir . '/' . substitute(l:old, '/$', '', '')
+      if l:old =~# '/$'
+        if !isdirectory(l:path)
+          call mkdir(l:path, 'p')
+          echom "Created directory: " . l:old
+        endif
+      else
+        if !filereadable(l:path) && !isdirectory(l:path)
+          call writefile([], l:path)
+          echom "Created: " . l:old
+        endif
+      endif
+    endif
+  endfor
+
+  setlocal nomodified
+  tabclose
+  redraw | echo "Mini-Oil: Filesystem updated."
+endfunction
+
+" nnoremap <leader>e :call <SID>minioil()<CR>
+
+function! s:toggle_comment(line1, line2) abort
+  " Fallback to standard hash if the filetype plugin didn't set a string
+  let l:cms = empty(&commentstring) ? '# %s' : &commentstring
+  let l:parts = split(l:cms, '%s', 1)
+  
+  " Extract the left and right sides of the comment string
+  let l:left = trim(l:parts[0])
+  let l:right = len(l:parts) > 1 ? trim(l:parts[1]) : ''
+
+  for l:lnum in range(a:line1, a:line2)
+    let l:line = getline(l:lnum)
+    if empty(l:line) | continue | endif
+
+    " Preserve exact indentation
+    let l:indent = matchstr(l:line, '^\s*')
+    let l:content = substitute(l:line, '^\s*', '', '')
+
+    " Safely escape comment characters for regex matching
+    let l:esc_left = escape(l:left, '/*\^$.~[]')
+    let l:esc_right = escape(l:right, '/*\^$.~[]')
+
+    " Check if the line is already commented
+    let l:is_commented = 0
+    if l:content =~# '^' . l:esc_left
+      if empty(l:right) || l:content =~# l:esc_right . '$'
+        let l:is_commented = 1
+      endif
+    endif
+
+    if l:is_commented
+      " UNCOMMENT: Strip the comment characters and exactly 1 space
+      let l:new_content = substitute(l:content, '^' . l:esc_left . '\s\?', '', '')
+      if !empty(l:right)
+        let l:new_content = substitute(l:new_content, '\s\?' . l:esc_right . '$', '', '')
+      endif
+      call setline(l:lnum, l:indent . l:new_content)
+    else
+      " COMMENT: Wrap the content and add spaces for readability
+      let l:new_content = l:left . ' ' . l:content
+      if !empty(l:right)
+        let l:new_content .= ' ' . l:right
+      endif
+      call setline(l:lnum, l:indent . l:new_content)
+    endif
+  endfor
+endfunction
+" Toggle comment on current line (Normal mode)
+nnoremap gc :call <SID>toggle_comment(line('.'), line('.'))<CR>
+
+" Toggle comment on visually selected lines (Visual mode)
+vnoremap gc :call <SID>toggle_comment(line("'<"), line("'>"))<CR>
