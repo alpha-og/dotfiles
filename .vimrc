@@ -592,61 +592,87 @@ endfunction
 nnoremap <leader>ds :call <SID>manual_doc_search()<CR>
 nnoremap <leader>dw :call <SID>cursor_doc_search()<CR>
 
-" Formats code via temporary files to prevent buffer deletion on syntax errors.
+let g:autoformat_enabled = 1
+
 function! s:format_buffer() abort
+  if !g:autoformat_enabled
+    return
+  endif
+
   let l:ft = &filetype
   let l:cmd = ''
   let l:ext = ''
 
-  " 1. Route the filetype to the correct CLI tool
   if l:ft ==# 'python'
     if !executable('ruff')
-      echohl ErrorMsg | echom "Ruff is not installed or missing from PATH." | echohl None
       return
     endif
-    " The command to format a specific file in place quietly
-    let l:cmd = 'ruff format --quiet '
+    let l:cmd = 'ruff format '
     let l:ext = '.py'
+  elseif l:ft ==# 'javascript' || l:ft ==# 'typescript' || l:ft ==# 'javascriptreact' || l:ft ==# 'typescriptreact' || l:ft ==# 'json' || l:ft ==# 'jsonc'
+    if !executable('biome')
+      return
+    endif
+    let l:cmd = 'biome format --write '
+    let l:ext = l:ft ==# 'javascriptreact' ? '.jsx' :
+              \ l:ft ==# 'typescriptreact' ? '.tsx' :
+              \ l:ft ==# 'typescript' ? '.ts' :
+              \ '.' . l:ft
+  elseif l:ft ==# 'go'
+    if !executable('gofmt')
+      return
+    endif
+    let l:cmd = 'gofmt -w '
+    let l:ext = '.go'
+  elseif l:ft ==# 'rust'
+    if !executable('rustfmt')
+      return
+    endif
+    let l:cmd = 'rustfmt '
+    let l:ext = '.rs'
+  elseif l:ft ==# 'lua'
+    if !executable('stylua')
+      return
+    endif
+    let l:cmd = 'stylua '
+    let l:ext = '.lua'
   else
-    redraw | echohl WarningMsg | echom "No formatter configured for filetype: " . l:ft | echohl None
     return
   endif
 
-  redraw | echo "Formatting..."
-
-  " 2. Save your exact cursor position and scroll state
   let l:view = winsaveview()
-  
-  " 3. Write current buffer to a temporary background file
   let l:tmp = tempname() . l:ext
   call writefile(getline(1, '$'), l:tmp)
-  
-  " 4. Run the formatter on the temporary file
+
   let l:output = system(l:cmd . shellescape(l:tmp))
-  
-  " 5. Check if it succeeded
+
   if v:shell_error == 0
     let l:formatted = readfile(l:tmp)
-    
-    " Only update the buffer if changes were actually made
     if getline(1, '$') != l:formatted
       silent %delete _
       call setline(1, l:formatted)
-      redraw | echo "Formatted successfully (" . l:ft . ")"
-    else
-      redraw | echo "Already formatted"
     endif
   else
-    " If Ruff fails (usually due to invalid Python syntax), alert the user safely
-    redraw | echohl ErrorMsg | echom "Formatting failed. Check for syntax errors." | echohl None
+    let l:errlines = split(l:output, "\n")
+    redraw | echohl ErrorMsg
+    for l:line in l:errlines[0:4]
+      echom l:line
+    endfor
+    echohl None
   endif
-  
-  " 6. Cleanup and restore cursor
+
   call delete(l:tmp)
   call winrestview(l:view)
 endfunction
-nnoremap <leader>fm :call <SID>format_buffer()<CR>
 
+command! ToggleAutoFormat let g:autoformat_enabled = !g:autoformat_enabled
+
+augroup AutoFormat
+  autocmd!
+  autocmd BufWritePre *.css,*.py,*.js,*.ts,*.jsx,*.tsx,*.json,*.jsonc,*.go,*.rs,*.lua call s:format_buffer()
+augroup END
+
+nnoremap <leader>fm :call <SID>format_buffer()<CR>
 " CURSOR SHAPES (Neovim Behavior)
 " Send raw escape sequences to the terminal to change cursor shape:
 " 1 or 2 = Solid Block (Normal mode)
@@ -663,4 +689,4 @@ if exists('$TMUX')
   let &t_SR = "\ePtmux;\e\e[4 q\e\\"
 endif
 
-set fillchars+=eob:\
+let &fillchars .= ',eob: '
