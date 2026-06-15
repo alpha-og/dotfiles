@@ -662,3 +662,5 @@ if exists('$TMUX')
   let &t_EI = "\ePtmux;\e\e[2 q\e\\"
   let &t_SR = "\ePtmux;\e\e[4 q\e\\"
 endif
+
+set fillchars+=eob:\
