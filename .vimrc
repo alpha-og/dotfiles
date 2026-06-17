@@ -115,7 +115,8 @@ nnoremap <leader><leader>k <C-w>r
 nnoremap <leader><leader>l <C-w>r
 
 " Editor Interactions
-nnoremap <leader>e :Lexplore<CR>
+nnoremap <leader>e :call OpenNetrw()<CR>
+" nnoremap <leader>e :Lexplore<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 nnoremap <C-d> <C-d>zz
@@ -297,6 +298,21 @@ augroup AutoFormat
   autocmd!
   autocmd BufWritePre *.css,*.py,*.js,*.ts,*.jsx,*.tsx,*.json,*.jsonc,*.go,*.rs,*.lua call s:format_buffer()
 augroup END
+
+autocmd BufEnter * if &filetype ==# 'netrw' | let s:last_netrw_dir = b:netrw_curdir | endif
+
+function! OpenNetrw() abort
+  let l:netrw_open = len(filter(range(1, bufnr('$')), 
+        \ 'getbufvar(v:val, "&filetype") ==# "netrw"'))
+  if l:netrw_open
+    Lexplore
+  elseif exists('s:last_netrw_dir') && isdirectory(s:last_netrw_dir)
+    execute 'Lexplore ' . s:last_netrw_dir
+  else
+    Lexplore
+  endif
+endfunction
+
 
 " Functions
 
