@@ -1,6 +1,7 @@
--- ~/.config/rex/scripts/auto_name.lua
+-- ~/.config/rex/scripts/naming.lua
+-- Auto-naming for Rex sessions and tabs. (Loaded by listener.lua.)
 -- Auto-naming for Rex sessions and tabs. Run with: rex do <this file>
--- (started automatically at config load; see auto_name_start.sh / init.lua)
+-- (started automatically at config load; see listener_start.sh / init.lua)
 --
 -- Sessions created *after this script starts* are renamed once, the first
 -- time a program in them reports a working directory: main repo name via
@@ -14,7 +15,7 @@
 -- keep the exact casing on disk ("dev", "RPL", "feature login ui") with
 -- separators turned into spaces.
 --
--- Labels this script set survive restarts via scripts/auto_name.named.
+-- Labels this script set survive restarts via scripts/naming.labels.
 -- Anything human-named (default "Window <hex>", lowercase legacy labels,
 -- and state-file entries) is fair game; anything else is never touched.
 
@@ -23,7 +24,6 @@ rex.call("session.attach_all", { event_scope = "all" })
 local windows_named = {}    -- window_id -> last label we set
 local sessions_pending = {} -- session_id -> true (created after we started)
 local label_history = {}    -- label -> true (labels we are known to have set)
-
 -- Record a label as ours (ownership proof for future sweeps) and persist.
 local function remember_label(label)
   if not label or label == "" then return end
@@ -31,7 +31,7 @@ local function remember_label(label)
 end
 
 local state_path = (os.getenv("HOME") or "")
-  .. "/.config/rex/scripts/auto_name.named"
+  .. "/.config/rex/scripts/naming.labels"
 
 -- Load/save the state. Two record kinds:
 --   K\t<window_id>\t<label>  last label we set on a window
@@ -384,7 +384,7 @@ end
 local function sweep()
   local ok, list = pcall(function() return rex.call("session.list") end)
   if not ok or type(list) ~= "table" then
-    rex.log("auto_name sweep: session.list failed: " .. tostring(list))
+    rex.log("naming sweep: session.list failed: " .. tostring(list))
     return
   end
   for _, sess in ipairs(list.sessions or {}) do
