@@ -17,28 +17,31 @@ for _, app in ipairs(apps) do
     title = app.title,
     category = "Launchers",
     run = function(ctx)
-      -- Open in the working directory of the pane the action was run from,
-      -- when the terminal reports one.
+      -- Working directory of the pane the action was run from. NOTE: shells
+      -- here don't report OSC-7 pwd, so use the foreground process's cwd.
       local cwd = nil
-      local ok, pwd = pcall(function()
-        return rex.block.call("com.superlogical.terminal", "pwd",
+      local ok, proc = pcall(function()
+        return rex.block.call("com.superlogical.terminal", "process",
           { block_id = ctx.block_id })
       end)
-      if ok and type(pwd) == "table" and pwd.pwd and pwd.pwd ~= "" then
-        cwd = pwd.pwd
+      if ok and type(proc) == "table" and proc.foreground
+          and proc.foreground.cwd and proc.foreground.cwd ~= "" then
+        cwd = proc.foreground.cwd
         if cwd:sub(1, 7) == "file://" then
           cwd = cwd:sub(8) -- strip the file:// prefix OSC 7 replies use
         end
       end
 
-      -- The shell block starts its program through a login shell, but the
-      -- server's PATH may not include Homebrew, so prepend common bin dirs.
+      -- NOTE: this server build ignores the shell flavor's `cwd` option, so
+      -- the directory is honored by cd-ing inside the command instead.
       local options = {
-        command = { app.command },
         path_prepend = { "/opt/homebrew/bin", "/usr/local/bin" },
       }
-      if cwd then
-        options.cwd = cwd
+      if cwd and cwd ~= "" then
+        options.command = { "/bin/zsh", "-c",
+          string.format("cd %q; exec %s", cwd, app.command) }
+      else
+        options.command = { app.command }
       end
 
       rex.session.new_window({

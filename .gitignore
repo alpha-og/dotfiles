@@ -1,3 +1,7 @@
 node_modules
 .DS_Store
 **/.supermaven
+
+# Rex auto-namer runtime state (per-machine window ids / pid)
+rex/scripts/auto_name.pid
+rex/scripts/auto_name.named

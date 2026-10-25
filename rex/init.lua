@@ -21,3 +21,13 @@ rex.bind("cmd+e", "client.sidebar.toggle")
 
 require("window_mode")
 require("launchers")
+
+-- Auto-naming listener: names new sessions after their project and tabs
+-- after their foreground program. The start script is a singleton — safe to
+-- attempt at every config load (server start / reload).
+if os.getenv("HOME") then
+  rex.exec.start(
+    { "/bin/sh", os.getenv("HOME") .. "/.config/rex/scripts/auto_name_start.sh" },
+    { detach = true }
+  )
+end
