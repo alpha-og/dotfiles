@@ -27,8 +27,40 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Next match" })
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Previous match" })
 
 -- restart lsp server
-vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<CR>", { desc = "Restart lsp server" })
+-- vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<CR>", { desc = "Restart lsp server" })
 
 -- scroll up and down
 vim.keymap.set("n", "<S-u>", "<C-u>", { desc = "Scroll up" })
 vim.keymap.set("n", "<S-d>", "<C-d>", { desc = "Scroll down" })
+
+-- reload specified plugin
+function _G.reload()
+	for key in pairs(package.loaded) do
+		if key:match("^refinery") then
+			package.loaded[key] = nil
+		end
+	end
+	return require("refinery")
+end
+
+vim.keymap.set("n", "<leader>rr", function()
+	local plugin = _G.reload()
+	print("Plugin reloaded!")
+end, { noremap = true })
+
+-- unified diff
+vim.keymap.set("n", "<leader>df", require("unified").toggle, { desc = "Toggle unified diff" })
+
+vim.keymap.set("n", "<leader>dt", function()
+	local state = require("unified.state")
+	if not state.is_active() then
+		vim.notify("Unified is not active", vim.log.levels.WARN)
+		return
+	end
+	local tree_state = require("unified.file_tree.state")
+	if tree_state.window and vim.api.nvim_win_is_valid(tree_state.window) then
+		require("unified.file_tree.actions").close_tree()
+	else
+		require("unified.file_tree").show(state.get_commit_base())
+	end
+end, { desc = "Toggle unified file tree" })
