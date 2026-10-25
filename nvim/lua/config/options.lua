@@ -11,13 +11,13 @@ opt.smartindent = true
 opt.wrap = true
 
 -- Line numbers
-opt.number = true -- toggle line numbers
+opt.number = true         -- toggle line numbers
 opt.relativenumber = true -- toggle relative line numbers
 
 -- Search settings
 opt.ignorecase = true -- toggle ignore search query casing
 opt.smartcase = true
-opt.hlsearch = false -- toggle search result highlighting
+opt.hlsearch = false  -- toggle search result highlighting
 opt.incsearch = true
 
 -- Cursor
@@ -25,7 +25,7 @@ opt.cursorline = true -- toggle cursor line indicator
 
 -- Appearance
 opt.termguicolors = true -- allows colorschemes to work
-opt.background = "dark" -- set default colorscheme mode
+opt.background = "dark"  -- set default colorscheme mode
 -- opt.colorcolumn = "100"
 opt.signcolumn = "yes"
 opt.cmdheight = 1
@@ -59,11 +59,13 @@ opt.foldlevel = 99
 -- make command line go away
 opt.cmdheight = 0
 
+vim.lsp.log.set_level(vim.log.levels.ERROR)
+
 -- custom filetypes
 vim.filetype.add({
-	extension = {
-		ejs = "ejs",
-	},
+  extension = {
+    ejs = "ejs",
+  },
 })
 
 -- ghost text color for blink.nvim
