@@ -3,6 +3,7 @@
 local ensure_installed = {
 	-- languages
 	"rust",
+	"wgsl",
 	"cpp",
 	"c",
 	"javascript",
@@ -39,27 +40,18 @@ local config = function()
 	-- 	filetype = "ejs",
 	-- }
 
-	require("nvim-treesitter.configs").setup({
-		ensure_installed = ensure_installed,
-		auto_install = true,
-		highlight = {
-			enable = true,
-			additional_vim_regex_highlighting = false,
-		},
-		incremental_selection = {
-			enable = true,
-			keymaps = {
-				init_selection = "<C-s>",
-				node_incremental = "<C-s>",
-				scope_incremental = false,
-				node_decremental = "<BS>",
-			},
-		},
+	require("nvim-treesitter").install(ensure_installed)
+	vim.api.nvim_create_autocmd("FileType", {
+		callback = function(args)
+			-- Attempt to start treesitter highlighting for the current buffer
+			pcall(vim.treesitter.start, args.buf)
+		end,
 	})
 end
 
 return {
 	"nvim-treesitter/nvim-treesitter",
+	branch = "main",
 	build = ":TSUpdate",
 	config = config,
 }
