@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# rex-pick — fuzzy-switch Rex sessions, tabs, and panes with fzf.
+#
+# Entry format (tab-separated):
+#   display-label \t session_id \t preview_block_id \t target_id \t kind \t window_id
+# kinds: session | window | pane
+#
+# Public subcommands:
+#   rex-pick         the picker
+#   rex-pick --list  print entries (for testing / other pickers)
+#   rex-pick preview SID [BLOCK]
+#                   Preview text: plain text for sessions, colored terminal
+#                    capture (vt format, ANSI) for panes — fzf renders it.
+
+set -euo pipefail
+
+emit_entries() {
+  rex ls --json | jq -r '.sessions[].session_id' | while IFS= read -r sid; do
+    rex session inspect "$sid" --json 2>/dev/null | jq -r \
+      --arg sid "$sid" '
+      . as $root |
+      (.label // "?") as $s |
+      [($s + " — session"), $sid, "", $sid, "session", ""],
+      ($root.windows[] as $w |
+        ($w.label // "unnamed tab") as $wlabel |
+        [($s + " ▸ " + $wlabel), $sid, ($w.focused_block_id // ""), $w.window_id, "window", $w.window_id]),
+      ($root.windows[] as $w |
+        ($w.label // "unnamed tab") as $wlabel |
+        $w.layers[].blocks[] |
+        [($s + " ▸ " + $wlabel + " ▸ " + (.label // "shell")),
+         $sid, .block_id, .block_id, "pane", $w.window_id])
+      | @tsv'
+  done
+}
+
+# One context line for a terminal block: process · cwd · title.
+preview_header() {
+  local sid="$1" bid="$2" meta process cwd title
+  # One process lookup feeds both the name and the cwd fallback.
+  meta=$(rex block call -s "$sid" -b "$bid" process 2>/dev/null || true)
+  process=$(printf '%s' "$meta" | jq -r '(.foreground.name // "—")' || true)
+  cwd=$(rex block call -s "$sid" -b "$bid" pwd 2>/dev/null \
+    | jq -r '(.pwd // empty) | sub("^file://"; "")' || true)
+  [ -z "$cwd" ] && cwd=$(printf '%s' "$meta" \
+    | jq -r '(.foreground.cwd // "") | sub("^file://"; "")' || true)
+  [ -z "$cwd" ] && cwd="—"
+  title=$(rex block call -s "$sid" -b "$bid" title 2>/dev/null \
+    | jq -r '(.title // "") | sub("^file://"; "")' || true)
+  printf '\033[1m▸ %s · %s%s\033[0m\n' "$process" "$cwd" \
+    "$([ -n "$title" ] && printf ' · %s' "$title")"
+}
+
+preview_pane() {
+  local sid="$1" bid="$2"
+  preview_header "$sid" "$bid" || true
+  # vt format keeps colors and styles as ANSI; fzf renders them natively.
+  # No --unwrap: joining the terminal's wrapped lines scrambles the layout
+  # when fzf re-wraps it at a different width.
+  rex capture -s "$sid" -b "$bid" --trim --format=vt 2>/dev/null \
+    | tail -n 60 || true
+}
+
+# Session overview: window and pane tree, with program status when reported.
+preview_session() {
+  local sid="$1"
+  local insp
+  insp=$(rex session inspect "$sid" --json 2>/dev/null) || return 0
+  printf '%s\n' "$insp" | jq -r '
+    . as $root |
+    ("\u001b[1m\u25bc \(.label // "?")\u001b[0m windows: \($root.windows | length)"),
+    ($root.windows[] as $w |
+      ($w.label // "unnamed tab") as $wlabel |
+      "  \u25b8 " + $wlabel,
+      ($w.layers[].blocks[] |
+        "      " + (.label // "shell") +
+        "  (" + ((.creator_name // "") | sub("^com\\.superlogical\\."; "")) + ")"))
+  '
+}
+
+preview() {
+  local sid="$1" bid="${2:-}"
+  if [ -z "$bid" ]; then
+    preview_session "$sid"
+  else
+    preview_pane "$sid" "$bid"
+  fi
+}
+
+jump() {
+  local disp="$1" sid="$2" preview="$3" target="$4" kind="$5" wid="$6"
+  # Ask the Rex app to show that session (and tab), so a cross-session jump is visible.
+  local client args err
+  client=$(rex client ls --json | jq -r '[.clients[] | select(.info.kind == "app")][0].client_id // empty')
+  if [ -n "$client" ]; then
+    case "$kind" in
+      session) args="session_id=$sid" ;;
+      *)       args="session_id=$sid window_id=$wid" ;;
+    esac
+    # Surface failures instead of silently doing nothing (e.g. Remote Control off).
+    if ! err=$(rex -C "$client" do session.select $args 2>&1 >/dev/null); then
+      printf '⚠ could not switch the app view: %s\n' "$err" >&2
+    fi
+  fi
+  if [ "$kind" = "pane" ]; then
+    rex focus -s "$sid" "$target" >/dev/null
+  fi
+}
+
+if [ "${1:-}" = "--list" ]; then
+  emit_entries
+  exit 0
+fi
+
+if [ "${1:-}" = "preview" ]; then
+  shift
+  preview "$@"
+  exit 0
+fi
+
+command -v fzf >/dev/null || { echo "rex-pick: fzf not found" >&2; exit 1; }
+
+selection=$(emit_entries | fzf \
+  --prompt 'rex ▸ ' \
+  --delimiter $'\t' \
+  --with-nth 1 \
+  --tiebreak=begin,length \
+  --preview "$0 preview {2} {3}" \
+  --preview-window 'right:60%' \
+  --height '80%' \
+  --reverse \
+  --header 'select a session, tab, or pane · esc to cancel') || exit 0
+
+[ -z "$selection" ] && exit 0
+
+IFS=$'\t' read -r disp sid preview target kind wid <<<"$selection"
+jump "$disp" "$sid" "$preview" "$target" "$kind" "$wid"
