@@ -23,12 +23,13 @@ emit_entries() {
       [($s + " — session"), $sid, "", $sid, "session", ""],
       ($root.windows[] as $w |
         ($w.label // "unnamed tab") as $wlabel |
-        [($s + " ▸ " + $wlabel), $sid, ($w.focused_block_id // ""), $w.window_id, "window", $w.window_id]),
-      ($root.windows[] as $w |
-        ($w.label // "unnamed tab") as $wlabel |
-        $w.layers[].blocks[] |
-        [($s + " ▸ " + $wlabel + " ▸ " + (.label // "shell")),
-         $sid, .block_id, .block_id, "pane", $w.window_id])
+        ([($w.layers // [])[] | (.blocks // [])] | add // []) as $blocks |
+        [($s + " ▸ " + $wlabel), $sid, ($w.focused_block_id // ""), $w.window_id, "window", $w.window_id],
+        (if ($blocks | length) > 1 then
+          ($w.layers[].blocks[] |
+            [($s + " ▸ " + $wlabel + " ▸ " + (.label // "shell")),
+             $sid, .block_id, .block_id, "pane", $w.window_id])
+        else empty end))
       | @tsv'
   done
 }
