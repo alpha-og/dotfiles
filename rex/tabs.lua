@@ -1,12 +1,12 @@
 -- ~/.config/rex/tabs.lua
--- Tab actions backed by the listener's state files (scripts/auto_name.closed
--- and scripts/auto_name.prevtab, maintained by scripts/tabs.lua):
+-- Tab actions backed by the listener's state files (scripts/tabs.closed and
+-- scripts/tabs.previous, maintained by scripts/tabs.lua):
 --   Reopen Last Closed Tab  cmd+shift+t
 --   Focus Previous Tab      ctrl+tab
 
 local HOME = os.getenv("HOME") or ""
-local closed_path = HOME .. "/.config/rex/scripts/auto_name.closed"
-local prev_path = HOME .. "/.config/rex/scripts/auto_name.prevtab"
+local closed_path = HOME .. "/.config/rex/scripts/tabs.closed"
+local prev_path = HOME .. "/.config/rex/scripts/tabs.previous"
 
 rex.action({
   name = "tab_reopen_last",
@@ -69,7 +69,23 @@ rex.action({
       if sid == ctx.session_id then prev = _prev end
     end
     f:close()
+
+    -- Only target a live window in this session. If history is missing or
+    -- points at a closed tab, do nothing: falling back to another action can
+    -- jump to a different session.
+    local live = false
     if prev and prev ~= "" and prev ~= "-" then
+      local ok, view = pcall(function()
+        return rex.session.view{ session_id = ctx.session_id }
+      end)
+      if ok and type(view) == "table" then
+        for _, win in ipairs(view.windows or {}) do
+          if win.window_id == prev then live = true; break end
+        end
+      end
+    end
+
+    if live then
       -- Client action on purpose: it moves the app's visible tab (a plain
       -- server focus_window flips state the client UI ignores).
       rex.client.queue("session.select", { session_id = ctx.session_id, window_id = prev })

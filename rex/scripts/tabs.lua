@@ -42,23 +42,58 @@ local function capture_layout(sid, win)
   end
 end
 
--- Refresh snapshots of every session's windows.
+-- Persist the active/previous tab pair for each session.
+local function tabs_save()
+  local f = io.open(prev_path, "w")
+  if not f then return end
+  for sid, cur in pairs(tab_cur) do
+    f:write(sid .. "\t" .. cur .. "\t" .. (tab_prev[sid] or "-") .. "\n")
+  end
+  f:close()
+end
+
+-- Refresh snapshots of every session's windows, and forget history for
+-- sessions and windows that no longer exist.
 local function capture_all()
   local ok, list = pcall(function() return rex.call("session.list") end)
   if not ok or type(list) ~= "table" then return end
+  local live = {}
+  local dirty = false
   for _, sess in ipairs(list.sessions or {}) do
     local sid = sess.session_id
     if sid then
+      live[sid] = true
       local ok2, view = pcall(function()
         return rex.session.view{ session_id = sid }
       end)
       if ok2 and type(view) == "table" then
+        local seen = {}
         for _, win in ipairs(view.windows or {}) do
           capture_layout(sid, win)
+          seen[win.window_id] = true
+        end
+        if tab_cur[sid] and not seen[tab_cur[sid]] then
+          tab_cur[sid] = nil
+          dirty = true
+        end
+        if tab_prev[sid] and not seen[tab_prev[sid]] then
+          tab_prev[sid] = nil
+          dirty = true
         end
       end
     end
   end
+
+  for sid in pairs(tab_cur) do
+    if not live[sid] then tab_cur[sid] = nil; dirty = true end
+  end
+  for sid in pairs(tab_prev) do
+    if not live[sid] then tab_prev[sid] = nil; dirty = true end
+  end
+  for wid, rec in pairs(layouts) do
+    if not live[rec.session_id] then layouts[wid] = nil end
+  end
+  if dirty then tabs_save() end
 end
 
 -- Push a closed window's snapshot onto the reopen stack (max 20 entries).
@@ -97,15 +132,6 @@ local function tabs_load()
   f:close()
 end
 
-local function tabs_save()
-  local f = io.open(prev_path, "w")
-  if not f then return end
-  for sid, cur in pairs(tab_cur) do
-    f:write(sid .. "\t" .. cur .. "\t" .. (tab_prev[sid] or "-") .. "\n")
-  end
-  f:close()
-end
-
 -- Focus/layout changes refresh snapshots and drive the previous-tab pair.
 local pending = {} -- session_id -> true
 local function refresh_soon(sid)
@@ -128,6 +154,17 @@ local function refresh_soon(sid)
           if l.session_id == sid then layouts[wid] = nil end
         end
       end
+      -- Drop history that points at windows this session no longer has.
+      local dirty = false
+      if tab_cur[sid] and not seen[tab_cur[sid]] then
+        tab_cur[sid] = nil
+        dirty = true
+      end
+      if tab_prev[sid] and not seen[tab_prev[sid]] then
+        tab_prev[sid] = nil
+        dirty = true
+      end
+      if dirty then tabs_save() end
     end
   end)
 end
@@ -154,6 +191,6 @@ rex.on("window_closed", function(_ctx, ev)
   end
 end)
 
+tabs_load()
 rex.every(20, capture_all)
 capture_all()
-tabs_load()
