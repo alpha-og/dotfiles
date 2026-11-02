@@ -15,7 +15,10 @@ $username\
 $hostname\
 $localip\
 $directory\
-$fill\
+$line_break\
+[└─❯ ](bold overlay0)"""
+
+right_format = """\
 $shlvl\
 $singularity\
 $kubernetes\
@@ -96,10 +99,7 @@ $cmd_duration $jobs $time\
 $status\
 $os\
 $container\
-$shell\
-$line_break\
-[└─❯ ](bold overlay0)"""
-
+$shell"""
 
 [character]
 # Note the use of Catppuccin color 'maroon'
